@@ -5,8 +5,6 @@ from datetime import datetime
 from enum import Enum
 from dataclasses import dataclass, field, asdict
 
-import numpy as np
-import pandas as pd
 import aiohttp
 
 NOAA_URL = "https://dcs1.noaa.gov/"
