@@ -1,27 +1,18 @@
-import asyncio
 import asyncpg
 
-DSN = "postgresql://{user}:{password}@{host}/{database}"
-
-
-def get_url(config):
-    return DSN.format(
-        user=config["DB_USER"],
-        password=config["DB_PASSWORD"],
-        database=config["DB_DATABASE"],
-        host=config["DB_HOST"],
-    )
+from heros.types.sensordata import sensors_datadb_list, sensors_lastupdate_list
+from heros.types.wxtdata import metdatadb_list
+from heros.config import database_url
 
 
 async def init_db(app):
-    config = app["config"]
-    dsn = get_url(config)
+    dsn = database_url()
     app["pool"] = await asyncpg.create_pool(dsn)
     yield
     await app["pool"].close()
 
 
-async def copy_sensordata_to_table(conn, data):
+async def insert_sensordata(conn, data):
     tuples = [d.model_dump() for d in data]
 
     await conn.executemany(
