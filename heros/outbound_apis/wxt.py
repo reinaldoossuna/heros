@@ -1,4 +1,3 @@
-import json
 import logging
 import re
 from datetime import datetime, timedelta
@@ -9,15 +8,7 @@ import aiohttp
 
 NOAA_URL = "https://dcs1.noaa.gov/"
 LOGIN_URL = NOAA_URL + "ACCOUNT/Login"
-LOGOUT_URL = NOAA_URL + "ACCOUNT/SIGNOUT"
 FIELD_TEST = NOAA_URL + "Account/FieldTest"
-MESSAGES_URL = NOAA_URL + "Messages/"
-
-HEADERS = {
-    "Accept": "application/json, text/javascript, */*; q=0.01",
-    "Accept-Encoding": "gzip, deflate, sdch",
-    "Accept-Language": "en-US,en;q=0.8",
-}
 
 
 LOGGER = logging.getLogger(__name__)
