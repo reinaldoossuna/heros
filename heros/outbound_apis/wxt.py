@@ -1,8 +1,10 @@
 import logging
 import re
+from typing import Optional
 from datetime import datetime, timedelta
 from enum import Enum
 from dataclasses import dataclass, field, asdict
+from yarl import URL
 
 import aiohttp
 
@@ -19,6 +21,7 @@ class Columns(Enum):
     DATA = "TblDcpDataData"
 
 
+#TODO: data serialization and validation should be done using pydantic
 @dataclass
 class RequestsFields:
     StartDt: datetime
@@ -35,15 +38,20 @@ class RequestsFields:
 
 async def request_data(requests: RequestsFields, login: str, password: str):
     payload = asdict(requests)
+    LOGGER.info(f"Requesting data from NOAA: {payload}")
     payload.update({"Username": login, "Password": password})
 
     async with aiohttp.ClientSession() as session:
         async with session.post(FIELD_TEST, data=payload) as r:
             resp = await r.json()
-            return resp["msgs"]
+            if resp["success"]:
+                return resp["msgs"]
+            else:
+                LOGGER.error(f"Failed to get data: {resp['error']}")
+                return None
 
 
-async def login(username: str, password: str):
+async def login(username: str, password: str) -> Optional[aiohttp.ClientSession]:
     session = aiohttp.ClientSession()
 
     r = await session.get(LOGIN_URL)
@@ -53,10 +61,11 @@ async def login(username: str, password: str):
         "Password": password,
     }
     async with session.post(LOGIN_URL, data=payload) as r:
-        if r.ok:
+        if r.url != URL("https://dcs1.noaa.gov/ACCOUNT/Login"):
             return session
         else:
-            r.reason()
+            LOGGER.error("Failed to login, probably the password has changed")
+            return None
 
 
 def parse_date(date_str: str) -> datetime:
