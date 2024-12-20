@@ -88,7 +88,7 @@ def parse_list(list_str: str):
     # separate the 3 data list
     lists = list_str.split("\r\n")
     # filter out anything but numbers
-    num_re = re.compile(r"(\d+(?:.\d*)?)")
+    num_re = re.compile(r"(\d+(?:\.\d*)?)")
     dirty_lists = map(lambda l: num_re.findall(l), lists)
     # filter any list with size less than 7
     str_lists = filter(lambda l: len(l) == 7, dirty_lists)
