@@ -1,7 +1,7 @@
 import json
 import logging
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
 from dataclasses import dataclass, field, asdict
 
@@ -108,7 +108,10 @@ columns = [
 
 
 def parse_one_json(json_resp: dict):
+    deltas = [timedelta(hours=-2), timedelta(hours=-1), timedelta(hours=0)]
     date = parse_date(json_resp[Columns.CAR_TIME.value])
+    dates = [date + delta for delta in deltas]
+
     lists_data = parse_list(json_resp[Columns.DATA.value])
-    lists_w_date = map(lambda l: [date] + l, lists_data)
-    return list(map(lambda l: tuple(l), lists_w_date))
+    lists_w_date = [[d] + list for d, list in zip(dates, lists_data, strict=False)]
+    return list(map(lambda list: tuple(list), lists_w_date))
