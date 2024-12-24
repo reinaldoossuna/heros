@@ -26,23 +26,51 @@ async def insert_sensordata(conn, data):
     )
 
 
-# TODO: this is almost the same code as above
 async def insert_wxtdata(conn, data):
     await conn.executemany(
         """
-        INSERT INTO dados_met
-               (
-            "Data",
-            "Pressão atmosférica (bar)",
-            "Temperatura do ar (°C)",
-            "Umidade relativa do ar (%)",
-            "Precipitação (mm)",
-            "Velocidade do vento (m/s)",
-            "Direção do vento (˚)",
-            "Bateria (v)"
-        )
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-        ON CONFLICT ("Data") DO NOTHING;
+insert
+    into
+    hydronet.public.dados_met as t
+       (
+    "Data",
+    "Pressão atmosférica (bar)",
+    "Temperatura do ar (°C)",
+    "Umidade relativa do ar (%)",
+    "Precipitação (mm)",
+    "Velocidade do vento (m/s)",
+    "Direção do vento (˚)",
+    "Bateria (v)"
+)
+values ($1,$2,$3,$4,$5,$6,$7,$8)
+on
+conflict ("Data")
+do
+update
+set
+    (
+    "Pressão atmosférica (bar)",
+    "Temperatura do ar (°C)",
+    "Umidade relativa do ar (%)",
+    "Precipitação (mm)",
+    "Velocidade do vento (m/s)",
+    "Direção do vento (˚)",
+    "Bateria (v)"
+) =
+    (coalesce(EXCLUDED."Pressão atmosférica (bar)",
+    t."Pressão atmosférica (bar)"),
+    coalesce(EXCLUDED."Temperatura do ar (°C)",
+    t."Temperatura do ar (°C)"),
+    coalesce(EXCLUDED."Umidade relativa do ar (%)",
+    t."Umidade relativa do ar (%)"),
+    coalesce(EXCLUDED."Precipitação (mm)",
+    t."Precipitação (mm)"),
+    coalesce(EXCLUDED."Velocidade do vento (m/s)",
+    t."Velocidade do vento (m/s)"),
+    coalesce(EXCLUDED."Direção do vento (˚)",
+    t."Direção do vento (˚)"),
+    coalesce(EXCLUDED."Bateria (v)",
+    t."Bateria (v)"));
         """,
         data,
     )
