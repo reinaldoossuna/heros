@@ -1,14 +1,19 @@
 #!/usr/bin/env /home/nardo/projects/hydronet/.venv/bin/python3
 #
 from aiohttp import web
+import logging
 from dotenv import load_dotenv
 
 import heros.api.sensores as sensores
 import heros.api.met as met
 from heros.db_access.sql import init_db
+from heros.logging import setup_logging
 import heros.config as cfg
 
 load_dotenv()
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 def create_app():
@@ -35,5 +40,7 @@ def create_app():
 
 
 if __name__ == "__main__":
+    setup_logging()
+    LOGGER.info("Starting server ...")
     app = create_app()
     web.run_app(app)
