@@ -17,15 +17,16 @@ LOGGER = logging.getLogger(__name__)
 
 
 class MetereologicoData(BaseModel):
-    data: datetime = Field(serialization_alias="Data")
-    pressao_atmosf: float = Field(serialization_alias="Pressão atmosférica (bar)")
-    temperatura_do_ar: float = Field(serialization_alias="Temperatura do ar (°C)")
-    umidade_relativa_do_ar: float = Field(serialization_alias="Umidade relativa do ar (%)")
-    precipitacao: float = Field(serialization_alias="Precipitação (mm)")
-    velocidade_do_vento: float = Field(serialization_alias="Velocidade do vento (m/s)")
-    direcao_do_vento: float = Field(serialization_alias="Direção do vento (˚)")
-    bateria: float = Field(serialization_alias="Bateria (v)")
+    data: datetime = Field(alias="Data")
+    pressao_atmosf: Optional[float] = Field(alias="Pressão atmosférica (bar)")
+    temperatura_do_ar: Optional[float] = Field(alias="Temperatura do ar (°C)")
+    umidade_relativa_do_ar: Optional[float] = Field(alias="Umidade relativa do ar (%)")
+    precipitacao: Optional[float] = Field(alias="Precipitação (mm)")
+    velocidade_do_vento: Optional[float] = Field(alias="Velocidade do vento (m/s)")
+    direcao_do_vento: Optional[float] = Field(alias="Direção do vento (˚)")
+    bateria: Optional[float] = Field(alias="Bateria (v)")
 
+metdata_list = TypeAdapter(List[MetereologicoData])
 
 NOAA_datetime = NewType("NOAA_datetime", Annotated[datetime, BeforeValidator(parse_date)])
 
