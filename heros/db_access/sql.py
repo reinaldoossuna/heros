@@ -1,7 +1,7 @@
 import asyncpg
 
 from heros.types.sensordata import sensors_datadb_list, sensors_lastupdate_list
-from heros.types.wxtdata import metdatadb_list
+from heros.types.wxtdata import metdata_list
 from heros.config import database_url
 
 
@@ -114,5 +114,5 @@ async def get_met_data(conn):
         SELECT *
         FROM hydronet.public.dados_met;
         """)
-        data = metdatadb_list.validate_python(records)
+        data = metdata_list.validate_python(records)
         return data
