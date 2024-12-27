@@ -134,9 +134,9 @@ async def get_met_data(
         """
     if start is not None or end is not None:
         query += """WHERE """
-        query += f"""ds.data_leitura >= '{start}'""" if start else ""
+        query += f"""ds."Data" >= '{start}'""" if start else ""
         query += """AND """ if start and end else ""
-        query += f"""ds.data_leitura <= '{end}' """ if end else ""
+        query += f"""ds."Data" <= '{end}' """ if end else ""
     query += """;"""
     async with conn.transaction():
         records = await conn.fetch(query)
