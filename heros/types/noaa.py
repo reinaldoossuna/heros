@@ -96,10 +96,10 @@ msgsnoaa_list = TypeAdapter(List[MsgNOAA])
 
 
 US_datetime = Annotated[
-        datetime,
-        PlainSerializer(lambda date: date.strftime("%m/%d/%Y"), return_type=str, when_used="always"),
-        BeforeValidator(ensure_datetime),
-    ]
+    datetime,
+    PlainSerializer(lambda date: date.strftime("%m/%d/%Y"), return_type=str, when_used="always"),
+    BeforeValidator(ensure_datetime),
+]
 
 
 class RequestsFields(BaseModel):

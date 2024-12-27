@@ -28,7 +28,7 @@ def parse_date(date_str: str) -> datetime:
     return dt
 
 
-def parse_clean_data(list_str: str):
+def parse_clean_data(list_str: str) -> List[List[float]]:
     # separate the 3 data list
     lists = list_str.split("\r\n")
     # filter out anything but numbers
