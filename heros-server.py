@@ -43,4 +43,4 @@ if __name__ == "__main__":
     setup_logging()
     LOGGER.info("Starting server ...")
     app = create_app()
-    web.run_app(app)
+    web.run_app(app, host="127.0.0.1", port=8000)
