@@ -5,7 +5,6 @@ from aiohttp import web
 
 import heros.db_access.sql as sql
 import heros.outbound_apis.noaa as noaa
-from heros.types.noaa import RequestsFields
 
 
 async def get_data(request):
@@ -32,8 +31,7 @@ async def update_sensores(request):
     conn = await pool.acquire()
     last_day = await sql.last_day_met(conn)
 
-    req = RequestsFields(start_date=last_day)
-    datas = await noaa.request_data(req, config["user"], config["password"])
+    datas = await noaa.request_data(config["user"], config["password"], start_date=last_day)
 
     tuples = map(to_tuple, filter(lambda d: d is not None, chain.from_iterable(datas)))
 

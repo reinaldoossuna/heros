@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 from typing import Optional
 
@@ -14,13 +15,15 @@ FIELD_TEST = NOAA_URL + "Account/FieldTest"
 LOGGER = logging.getLogger(__name__)
 
 
-async def request_data(requests: RequestsFields, login: str, password: str):
-    payload = requests.model_dump(by_alias=True)
-    LOGGER.info(f"Requesting data from NOAA: {payload}")
-    payload.update({"Username": login, "Password": password})
+async def request_data(
+    login: str, password: str, *, start_date: datetime, end_date: datetime = datetime.today()
+):
+    payload = RequestsFields(
+        start_date=start_date, end_date=end_date, user=login, password=password
+    )
 
     async with aiohttp.ClientSession() as session:
-        async with session.post(FIELD_TEST, data=payload) as r:
+        async with session.post(FIELD_TEST, data=payload.model_dump(by_alias=True)) as r:
             resp = await r.json()
 
             if resp["success"]:

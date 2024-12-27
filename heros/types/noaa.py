@@ -88,3 +88,5 @@ class RequestsFields(BaseModel):
     end_date: US_datetime = Field(default_factory=datetime.today, serialization_alias="EndDt")
     hours: int = Field(default=0, init_var=False, serialization_alias="HoursDt")
     addr: str = Field(default="B2F00066", init_var=False, serialization_alias="DcpAddr")
+    user: str = Field(serialization_alias="Username")
+    password: str = Field(serialization_alias="Password")
