@@ -4,7 +4,7 @@ from typing import Optional
 from yarl import URL
 
 import aiohttp
-from heros.types.wxtdata import RequestsFields, msgsnoaa_list
+from heros.types.noaa import RequestsFields, msgsnoaa_list
 
 NOAA_URL = "https://dcs1.noaa.gov/"
 LOGIN_URL = NOAA_URL + "ACCOUNT/Login"

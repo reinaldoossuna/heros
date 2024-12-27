@@ -1,7 +1,7 @@
 import asyncpg
 
-from heros.types.sensordata import sensors_datadb_list, sensors_lastupdate_list
-from heros.types.wxtdata import metdata_list
+from heros.types.db.linigrafos import sensors_datadb_list, sensors_lastupdate_list
+from heros.types.db.metereologico import metdata_list
 from heros.config import database_url
 
 

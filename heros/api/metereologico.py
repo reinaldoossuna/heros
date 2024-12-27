@@ -4,7 +4,7 @@ from aiohttp import web
 
 import heros.db_access.sql as sql
 import heros.outbound_apis.noaa as noaa
-from heros.types.wxtdata import RequestsFields
+from heros.types.noaa import RequestsFields
 
 
 async def get_data(request):

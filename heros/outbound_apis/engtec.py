@@ -4,7 +4,7 @@ import aiohttp
 from typing import Optional, List
 from pydantic import ValidationError
 
-from heros.types.sensordata import sensors_data_list, SensorData
+from heros.types.engtec import sensors_data_list, SensorData
 
 API_URL = "https://leituras.spi.engtecnologia.com/api/"
 LOGIN_URL = API_URL + "usuarios/login"

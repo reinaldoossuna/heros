@@ -1,6 +1,6 @@
 from enum import StrEnum
 import logging
-from typing import List, Optional, Annotated, NewType
+from typing import List, Optional, Annotated
 from datetime import datetime, timedelta
 from pydantic import (
     BaseModel,
@@ -10,25 +10,14 @@ from pydantic import (
     model_serializer,
     PlainSerializer,
 )
+
 from heros.types.utils import parse_date, parse_clean_data, list2dict, ensure_datetime
+from heros.types.db.metereologico import MetereologicoData
 
 
 LOGGER = logging.getLogger(__name__)
 
-
-class MetereologicoData(BaseModel):
-    data: datetime = Field(alias="Data")
-    pressao_atmosf: Optional[float] = Field(alias="Pressão atmosférica (bar)")
-    temperatura_do_ar: Optional[float] = Field(alias="Temperatura do ar (°C)")
-    umidade_relativa_do_ar: Optional[float] = Field(alias="Umidade relativa do ar (%)")
-    precipitacao: Optional[float] = Field(alias="Precipitação (mm)")
-    velocidade_do_vento: Optional[float] = Field(alias="Velocidade do vento (m/s)")
-    direcao_do_vento: Optional[float] = Field(alias="Direção do vento (˚)")
-    bateria: Optional[float] = Field(alias="Bateria (v)")
-
-metdata_list = TypeAdapter(List[MetereologicoData])
-
-NOAA_datetime = NewType("NOAA_datetime", Annotated[datetime, BeforeValidator(parse_date)])
+NOAA_datetime = Annotated[datetime, BeforeValidator(parse_date)]
 
 
 class MsgType(StrEnum):
@@ -38,7 +27,7 @@ class MsgType(StrEnum):
     Dirty = "?"
 
 
-NOAA_msgtype = NewType("NOAA_msgtype", Annotated[MsgType, BeforeValidator(MsgType)])
+NOAA_msgtype = Annotated[MsgType, BeforeValidator(MsgType)]
 
 
 class MsgNOAA(BaseModel):
@@ -87,14 +76,11 @@ class MsgNOAA(BaseModel):
 msgsnoaa_list = TypeAdapter(List[MsgNOAA])
 
 
-US_datetime = NewType(
-    "US_datetime",
-    Annotated[
+US_datetime = Annotated[
         datetime,
         PlainSerializer(lambda date: date.strftime("%m/%d/%Y"), return_type=str, when_used="always"),
         BeforeValidator(ensure_datetime),
-    ],
-)
+    ]
 
 
 class RequestsFields(BaseModel):
