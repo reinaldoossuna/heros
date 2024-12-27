@@ -2,6 +2,8 @@ from typing import Any, List
 from datetime import datetime, timedelta
 import re
 
+from pydantic import ValidationError
+
 
 from heros.types.db.metereologico import MetereologicoData
 
@@ -16,8 +18,12 @@ def parse_date(date_str: str) -> datetime:
     date_str is suppossed to be like "/Date(1734102240307)/"
     and the number inside is suppose to be a posix time
     """
-    posix_time = int(re.search(r"\d{10}", date_str).group(0))
-    dt = datetime.utcfromtimestamp(posix_time)
+    match = re.search(r"\d{10}", date_str)
+    if match is None:
+        raise ValidationError(f"{date_str} cannot be parsed")
+
+    posix_time = int(match.group(0))
+    dt = datetime.fromtimestamp(posix_time)
     dt = dt.replace(minute=0, second=0)
     return dt
 
