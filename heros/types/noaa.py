@@ -2,6 +2,7 @@ from enum import StrEnum
 import logging
 from typing import List, Optional, Annotated
 from datetime import datetime, timedelta
+from typing import TYPE_CHECKING, Any, List, Literal, Optional, Annotated
 from pydantic import (
     BaseModel,
     TypeAdapter,
@@ -71,6 +72,23 @@ class MsgNOAA(BaseModel):
         list_dicts = [list2dict(keys, l) for l in lists_w_date]
         list_met = [MetereologicoData(**dic) for dic in list_dicts]
         return list_met
+    if TYPE_CHECKING:
+        # Ensure type checkers see the correct return type
+        def model_dump(  # type: ignore
+            self,
+            *,
+            mode: Literal["json", "python"] | str = "python",
+            include: Any = None,
+            exclude: Any = None,
+            context: dict[str, Any] | None = None,
+            by_alias: bool = False,
+            exclude_unset: bool = False,
+            exclude_defaults: bool = False,
+            exclude_none: bool = False,
+            round_trip: bool = False,
+            warnings: bool | Literal["none", "warn", "error"] = True,
+            serialize_as_any: bool = False,
+        ) -> tuple: ...
 
 
 msgsnoaa_list = TypeAdapter(List[MsgNOAA])
