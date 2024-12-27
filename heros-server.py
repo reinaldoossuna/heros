@@ -27,7 +27,7 @@ def create_app():
         [
             web.get("/metereologico", met.get_data),
             web.get("/metereologico/update", met.update_sensores),
-            # web.get("/met/canlogin", met.update_sensores),
+            web.get("/met/canlogin", met.can_login),
             # web.get("/met/updatepassword", met.update_password),
             web.get("/linigrafos", linigrafos.get_data),
             web.get("/linigrafos/update", linigrafos.update_sensores),

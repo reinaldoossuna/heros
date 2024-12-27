@@ -1,5 +1,5 @@
-from itertools import chain
 from datetime import datetime
+from itertools import chain
 
 from aiohttp import web
 
@@ -41,3 +41,13 @@ async def update_sensores(request):
     await conn.close()
 
     return web.Response()
+
+
+async def can_login(request: web.Request) -> web.Response:
+    config = request.app["noaa_cfg"]
+    s = noaa.login(config["user"], config["password"])
+
+    if s is not None:
+        return web.Response(text="Login successful")
+
+    return web.Response(status=403, text="Failed to login")
