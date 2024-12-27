@@ -1,14 +1,10 @@
 import logging
-import re
 from typing import Optional
-from datetime import datetime, timedelta
-from enum import Enum
-from dataclasses import dataclass, field, asdict
 
 from yarl import URL
 
 import aiohttp
-from heros.types.wxtdata import RequestsFields, MsgNOAA, MsgType, msgsnoaa_list
+from heros.types.wxtdata import RequestsFields, msgsnoaa_list
 
 NOAA_URL = "https://dcs1.noaa.gov/"
 LOGIN_URL = NOAA_URL + "ACCOUNT/Login"

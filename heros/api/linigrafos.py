@@ -1,8 +1,6 @@
 from aiohttp import web
-from pydantic import ValidationError
-import json
 
-import heros.outbound_apis.spi as spi
+import heros.outbound_apis.engtec as engtec
 import heros.db_access.sql as sql
 from heros.types.localizacao import SensorLocalizacao
 
