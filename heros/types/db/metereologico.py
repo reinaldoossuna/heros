@@ -5,7 +5,9 @@ from pydantic import (
     BaseModel,
     TypeAdapter,
     Field,
+    model_serializer,
 )
+
 
 class MetereologicoData(BaseModel):
     data: datetime = Field(alias="Data")
@@ -16,5 +18,12 @@ class MetereologicoData(BaseModel):
     velocidade_do_vento: Optional[float] = Field(alias="Velocidade do vento (m/s)")
     direcao_do_vento: Optional[float] = Field(alias="Direção do vento (˚)")
     bateria: Optional[float] = Field(alias="Bateria (v)")
+
+    @model_serializer
+    def ser_model(self) -> tuple:
+        keys = MetereologicoData.__pydantic_fields__.keys()
+        values = [self.__getattribute__(key) for key in keys]
+        return tuple(values)
+
 
 metdata_list = TypeAdapter(List[MetereologicoData])
