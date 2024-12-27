@@ -1,8 +1,7 @@
 from enum import StrEnum
 import logging
-from typing import List, Optional, Annotated
-from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Any, List, Literal, Optional, Annotated
+from datetime import datetime
 from pydantic import (
     BaseModel,
     TypeAdapter,
@@ -12,7 +11,12 @@ from pydantic import (
     PlainSerializer,
 )
 
-from heros.types.utils import parse_date, parse_clean_data, list2dict, ensure_datetime
+from heros.types.utils import (
+    metdatadb_from,
+    parse_date,
+    parse_clean_data,
+    ensure_datetime,
+)
 from heros.types.db.metereologico import MetereologicoData
 
 
@@ -25,6 +29,7 @@ class MsgType(StrEnum):
     Good = "G"
     Message = "M"
     Text = "T"
+    A = "A"
     Dirty = "?"
 
 
@@ -58,20 +63,16 @@ class MsgNOAA(BaseModel):
     dateCreated: str = Field(alias="DateCreated")
 
     @model_serializer
-    def ser_model(self) -> List[Optional[MetereologicoData]]:
+    def ser_model(self) -> List[MetereologicoData]:
         if self.processInfo is not MsgType.Good:
             LOGGER.info(f"Msg type is {self.processInfo}, we wont try to parse")
             LOGGER.info(f"DATA: {self.data}")
             LOGGER.info("If you thing this is a mistake check the parser in the types module")
-            return [None]
-        keys = MetereologicoData.__pydantic_fields__.keys()
-        deltas = [timedelta(hours=-2), timedelta(hours=-1), timedelta(hours=0)]
-        dates = [self.dtMsgCar + delta for delta in deltas]
+            return []
+
         lists_data = parse_clean_data(self.data)
-        lists_w_date = [[d] + list for d, list in zip(dates, lists_data, strict=False)]
-        list_dicts = [list2dict(keys, l) for l in lists_w_date]
-        list_met = [MetereologicoData(**dic) for dic in list_dicts]
-        return list_met
+        return metdatadb_from(self.dtMsgCar, lists_data)
+
     if TYPE_CHECKING:
         # Ensure type checkers see the correct return type
         def model_dump(  # type: ignore
