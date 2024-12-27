@@ -43,7 +43,7 @@ async def update_sensores(request):
 
 async def can_login(request: web.Request) -> web.Response:
     config = request.app["noaa_cfg"]
-    s = noaa.login(config["user"], config["password"])
+    s = await noaa.login(config["user"], config["password"])
 
     if s is not None:
         return web.Response(text="Login successful")
