@@ -14,11 +14,17 @@ async def get_data(request):
         return web.json_response(dicts)
 
 
-async def update_sensores(request):
+async def update_sensores(request) -> web.Response:
     config = request.app["spi_config"]
 
-    session = await spi.login(config["user"], config["password"])
-    data = await spi.request_data(session)
+    session = await engtec.login(config["user"], config["password"])
+    if session is None:
+        return web.Response(
+            status=400,
+            text="Failed to login",
+        )
+
+    data = await engtec.request_data(session)
     await session.close()
 
     pool = request.app["pool"]
