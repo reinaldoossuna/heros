@@ -1,4 +1,5 @@
 from itertools import chain
+from datetime import datetime
 
 from aiohttp import web
 
@@ -9,8 +10,13 @@ from heros.types.noaa import RequestsFields
 
 async def get_data(request):
     pool = request.app["pool"]
+    start = request.rel_url.query.get("start", None)
+    end = request.rel_url.query.get("end", None)
+
+    start = datetime.strptime(start, "%d%m%Y") if start else None
+    end = datetime.strptime(end, "%d%m%Y") if end else None
     async with pool.acquire() as conn:
-        data = await sql.get_met_data(conn)
+        data = await sql.get_met_data(conn, start, end)
         dicts = [d.model_dump_json() for d in data]
         return web.json_response(dicts)
 

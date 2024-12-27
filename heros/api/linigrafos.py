@@ -1,15 +1,25 @@
 from aiohttp import web
+from datetime import datetime
 
+from heros.logging import LOGGER
 import heros.outbound_apis.engtec as engtec
 import heros.db_access.sql as sql
 from heros.types.localizacao import SensorLocalizacao
 
 
-# TODO: filter by date
-async def get_data(request):
+async def get_data(request: web.Request):
     pool = request.app["pool"]
+    start = request.rel_url.query.get("start", None)
+    end = request.rel_url.query.get("end", None)
+
+    start = datetime.strptime(start, "%d%m%Y") if start else None
+    end = datetime.strptime(end, "%d%m%Y") if end else None
+    LOGGER.info("Requesting data from db")
+    LOGGER.info(f"start: {start}")
+    LOGGER.info(f"end: {end}")
+
     async with pool.acquire() as conn:
-        data = await sql.get_sensor_data(conn)
+        data = await sql.get_sensor_data(conn, start, end)
         dicts = [d.model_dump_json() for d in data]
         return web.json_response(dicts)
 
