@@ -1,7 +1,14 @@
+from datetime import datetime
+from typing import List, Optional
 import asyncpg
 
-from heros.types.db.linigrafos import sensors_datadb_list, sensors_lastupdate_list
-from heros.types.db.metereologico import metdata_list
+from heros.types.db.linigrafos import (
+    SensorDataDB,
+    SensorLastUpdate,
+    sensors_datadb_list,
+    sensors_lastupdate_list,
+)
+from heros.types.db.metereologico import MetereologicoData, metdata_list
 from heros.config import database_url
 
 
@@ -88,17 +95,27 @@ async def last_day_met(conn):
     return r
 
 
-async def get_sensor_data(conn):
-    async with conn.transaction():
-        records = await conn.fetch("""
+async def get_sensor_data(
+    conn, start: Optional[datetime] = None, end: Optional[datetime] = None
+) -> List[SensorDataDB]:
+    query = """
         SELECT data_leitura, mac, valor_leitura
-        FROM hydronet.public.dados_sensores ds;
-        """)
+        FROM hydronet.public.dados_sensores ds
+        """
+    if start is not None or end is not None:
+        query += """WHERE """
+        query += f"""ds.data_leitura >= '{start}'""" if start else ""
+        query += """AND """ if start and end else ""
+        query += f"""ds.data_leitura <= '{end}' """ if end else ""
+    query += """;"""
+
+    async with conn.transaction():
+        records = await conn.fetch(query)
         data = sensors_datadb_list.validate_python(records)
         return data
 
 
-async def get_lastupdate_sensors(conn):
+async def get_lastupdate_sensors(conn) -> List[SensorLastUpdate]:
     async with conn.transaction():
         records = await conn.fetch("""
         SELECT mac, data
@@ -108,11 +125,20 @@ async def get_lastupdate_sensors(conn):
         return data
 
 
-async def get_met_data(conn):
-    async with conn.transaction():
-        records = await conn.fetch("""
+async def get_met_data(
+    conn, start: Optional[datetime] = None, end: Optional[datetime] = None
+) -> List[MetereologicoData]:
+    query = """
         SELECT *
-        FROM hydronet.public.dados_met;
-        """)
+        FROM hydronet.public.dados_met ds
+        """
+    if start is not None or end is not None:
+        query += """WHERE """
+        query += f"""ds.data_leitura >= '{start}'""" if start else ""
+        query += """AND """ if start and end else ""
+        query += f"""ds.data_leitura <= '{end}' """ if end else ""
+    query += """;"""
+    async with conn.transaction():
+        records = await conn.fetch(query)
         data = metdata_list.validate_python(records)
         return data
