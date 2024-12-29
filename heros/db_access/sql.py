@@ -26,7 +26,7 @@ async def insert_sensordata(conn, data):
         """
         INSERT INTO dados_sensores
                ("mac", "canal", "valor_leitura", "data_leitura", "sub_id_disp")
-        VALUES ($1,         $2,              $3,             $4,           $5)
+        VALUES ($1,         $2,              $3,             $4,           NULLIF($5, 'xxxxxxxxxx'))
         ON CONFLICT ("mac", "data_leitura") DO NOTHING;
         """,
         tuples,
