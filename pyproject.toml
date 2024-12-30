@@ -11,6 +11,12 @@ dependencies = [
     "python-dotenv>=1.0.1",
 ]
 
+[project.scripts]
+heros-server = "heros.server:main_server"
+
+[tool.uv]
+package = true
+
 [tool.ruff]
 line-length = 100
 indent-width = 4

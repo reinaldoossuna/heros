@@ -2,8 +2,8 @@ from aiohttp import web
 import logging
 from dotenv import load_dotenv
 
-import heros.api.sensores as sensores
-import heros.api.met as met
+import heros.api.linigrafos as linigrafos
+import heros.api.metereologico as met
 from heros.db_access.sql import init_db
 from heros.logging import setup_logging
 import heros.config as cfg
@@ -23,24 +23,25 @@ def create_app():
 
     app.add_routes(
         [
-            web.get("/met", met.get_data),
-            web.get("/met/update", met.update_sensores),
-            # web.get("/met/canlogin", met.update_sensores),
+            web.get("/metereologico", met.get_data),
+            web.get("/metereologico/update", met.update_sensores),
+            web.get("/metereologico/can_login", met.can_login),
             # web.get("/met/updatepassword", met.update_password),
-            web.get("/sensores", sensores.get_data),
-            web.get("/sensores/update", sensores.update_sensores),
-            web.get("/sensores/last_update", sensores.last_update),
-            web.get("/sensores/update_location", sensores.update_location),
+            web.get("/linigrafos", linigrafos.get_data),
+            web.get("/linigrafos/update", linigrafos.update_sensores),
+            web.get("/linigrafos/last_update", linigrafos.last_update),
+            web.get("/linigrafos/update_location", linigrafos.update_location),
         ]
     )
 
     return app
 
+
 def main_server():
     setup_logging()
     LOGGER.info("Starting server ...")
     app = create_app()
-    web.run_app(app)
+    web.run_app(app, port=8080)
 
 
 
