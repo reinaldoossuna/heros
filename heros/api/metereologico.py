@@ -31,11 +31,10 @@ async def update_sensores(request):
     conn = await pool.acquire()
     last_day = await sql.last_day_met(conn)
 
-    datas = await noaa.request_data(config["user"], config["password"], start_date=last_day)
+    noaamsgs = await noaa.request_data(config.user, config.password, start_date=last_day)
+    datas = chain.from_iterable(map(lambda m: m.model_dump(), noaamsgs))
 
-    tuples = map(to_tuple, filter(lambda d: d is not None, chain.from_iterable(datas)))
-
-    await sql.insert_wxtdata(conn, tuples)
+    await sql.insert_wxtdata(conn, datas)
     await conn.close()
 
     return web.Response()
