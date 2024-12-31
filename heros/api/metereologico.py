@@ -29,6 +29,9 @@ async def update_sensores(request):
     last_day = last_day if last_day is not None else datetime.fromtimestamp(0)
 
     noaamsgs = await noaa.request_data(config.user, config.password, start_date=last_day)
+    if noaamsgs is None:
+        return web.Response(status=404, text="Failed to get data from noaa api")
+
     datas = chain.from_iterable(map(lambda m: m.model_dump(), noaamsgs))
 
     await sql.insert_wxtdata(conn, datas)
