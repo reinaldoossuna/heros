@@ -4,6 +4,7 @@ import aiohttp
 from typing import Optional, List
 from pydantic import ValidationError
 
+from heros.config import Account
 from heros.types.engtec import sensors_data_list, SensorData
 
 API_URL = "https://leituras.spi.engtecnologia.com/api/"
@@ -13,7 +14,7 @@ DATA_URL = API_URL + "leituras/listar_leituras_por_idempresa"
 LOGGER = logging.getLogger(__name__)
 
 
-async def login(username: str, password: str) -> Optional[aiohttp.ClientSession]:
+async def _login(username: str, password: str) -> Optional[aiohttp.ClientSession]:
     LOGGER.info(f"Logging in as {username}")
     session = aiohttp.ClientSession()
     cred = {"email_usuario": username, "senha": password}
@@ -29,7 +30,7 @@ async def login(username: str, password: str) -> Optional[aiohttp.ClientSession]
             return None
 
 
-async def request_data(session) -> Optional[List[SensorData]]:
+async def _request_data(session) -> Optional[List[SensorData]]:
     LOGGER.info(f"Requesting data from {API_URL}")
     async with session.get(DATA_URL) as r:
         if r.ok:
@@ -45,3 +46,13 @@ async def request_data(session) -> Optional[List[SensorData]]:
         else:
             LOGGER.error(f"Failed to get data, reason: {r.reason}")
             return None
+
+
+async def request_data(account: Account) -> Optional[List[SensorData]]:
+    session = await _login(account.user, account.password)
+    if session is None:
+        return None
+
+    data = await _request_data(session)
+    await session.close()
+    return data
