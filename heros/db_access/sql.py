@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import List, Optional
+import logging
 import asyncpg
 
 from heros.types.db.linigrafos import (
@@ -9,12 +10,14 @@ from heros.types.db.linigrafos import (
     sensors_lastupdate_list,
 )
 from heros.types.db.metereologico import MetereologicoData, metdata_list
-from heros.config import database_url
+
+LOGGER = logging.getLogger(__name__)
 
 
 async def init_db(app):
-    dsn = database_url()
-    app["pool"] = await asyncpg.create_pool(dsn)
+    dsn = app["settings"].pg_dsn
+    LOGGER.info(f"Creating pool in the db: {dsn.hosts()[0]['host']}:{dsn.hosts()[0]['port']}")
+    app["pool"] = await asyncpg.create_pool(dsn.unicode_string())
     yield
     await app["pool"].close()
 

@@ -25,9 +25,9 @@ async def get_data(request: web.Request):
 
 
 async def update_sensores(request) -> web.Response:
-    config = request.app["spi_config"]
+    config = request.app["settings"].engtec
 
-    session = await engtec.login(config["user"], config["password"])
+    session = await engtec.login(config.user, config.password)
     if session is None:
         return web.Response(
             status=400,

@@ -21,11 +21,12 @@ async def get_data(request):
 
 
 async def update_sensores(request):
-    config = request.app["noaa_cfg"]
+    config = request.app["settings"].noaa
     pool = request.app["pool"]
 
     conn = await pool.acquire()
     last_day = await sql.last_day_met(conn)
+    last_day = last_day if last_day is not None else datetime.fromtimestamp(0)
 
     noaamsgs = await noaa.request_data(config.user, config.password, start_date=last_day)
     datas = chain.from_iterable(map(lambda m: m.model_dump(), noaamsgs))
@@ -37,8 +38,8 @@ async def update_sensores(request):
 
 
 async def can_login(request: web.Request) -> web.Response:
-    config = request.app["noaa_cfg"]
-    s = await noaa.login(config["user"], config["password"])
+    config = request.app["settings"].noaa
+    s = await noaa.login(config.user, config.password)
 
     if s is not None:
         return web.Response(text="Login successful")
