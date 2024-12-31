@@ -20,10 +20,6 @@ async def get_data(request):
         return web.json_response(dicts)
 
 
-def to_tuple(d: dict):
-    return tuple(d.values())
-
-
 async def update_sensores(request):
     config = request.app["noaa_cfg"]
     pool = request.app["pool"]
