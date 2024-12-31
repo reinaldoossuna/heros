@@ -1,6 +1,6 @@
-from typing import List
 from datetime import datetime
 from itertools import chain
+from typing import List
 
 from fastapi import APIRouter, HTTPException
 
@@ -9,7 +9,6 @@ import heros.outbound_apis.noaa as noaa
 from heros.config import settings
 from heros.db_access import pool
 from heros.types.db.metereologico import MetereologicoData
-
 
 router = APIRouter(prefix="/meterologico", tags=["meterologico"])
 

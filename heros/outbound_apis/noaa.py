@@ -1,8 +1,8 @@
-import requests
-from datetime import datetime
 import logging
+from datetime import datetime
 from typing import List, Optional
 
+import requests
 from yarl import URL
 
 from heros.types.noaa import MsgNOAA, RequestsFields, msgsnoaa_list

@@ -3,8 +3,8 @@ from typing import List, Optional
 
 from pydantic import (
     BaseModel,
-    TypeAdapter,
     Field,
+    TypeAdapter,
     model_serializer,
 )
 

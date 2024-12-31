@@ -3,6 +3,7 @@ from typing import List
 
 from pydantic import BaseModel, TypeAdapter, model_serializer
 
+
 class SensorData(BaseModel):
     """
     Sensor data how is send from eng.

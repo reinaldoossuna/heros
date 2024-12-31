@@ -1,5 +1,5 @@
-from typing_extensions import Annotated
 from pydantic import BaseModel, BeforeValidator
+from typing_extensions import Annotated
 
 posicoes = [
     "soter",

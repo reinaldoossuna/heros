@@ -1,15 +1,14 @@
+from datetime import datetime
+from typing import Iterable, List, Optional
+
 from psycopg import Connection
 from psycopg.rows import class_row
-
-from datetime import datetime
-from typing import List, Optional, Iterable
-
-from heros.types.engtec import SensorData
 
 from heros.types.db.linigrafos import (
     SensorDataDB,
     SensorLastUpdate,
 )
+from heros.types.engtec import SensorData
 
 
 def get_data(

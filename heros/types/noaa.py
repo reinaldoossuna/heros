@@ -1,24 +1,24 @@
-from enum import StrEnum
 import logging
-from typing import TYPE_CHECKING, Any, List, Literal, Optional, Annotated
 from datetime import datetime
+from enum import StrEnum
+from typing import TYPE_CHECKING, Annotated, Any, List, Literal, Optional
+
 from pydantic import (
     BaseModel,
-    TypeAdapter,
-    Field,
     BeforeValidator,
-    model_serializer,
+    Field,
     PlainSerializer,
+    TypeAdapter,
+    model_serializer,
 )
 
-from heros.types.utils import (
-    metdatadb_from,
-    parse_date,
-    parse_clean_data,
-    ensure_datetime,
-)
 from heros.types.db.metereologico import MetereologicoData
-
+from heros.types.utils import (
+    ensure_datetime,
+    metdatadb_from,
+    parse_clean_data,
+    parse_date,
+)
 
 LOGGER = logging.getLogger(__name__)
 

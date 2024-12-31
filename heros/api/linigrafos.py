@@ -1,13 +1,13 @@
-from typing import List
 from datetime import datetime
+from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from heros.logging import LOGGER
-from heros.config import settings
-from heros.db_access import pool
 import heros.db_access.linigrafos as lini
 import heros.outbound_apis.engtec as engtec
+from heros.config import settings
+from heros.db_access import pool
+from heros.logging import LOGGER
 from heros.types.db.linigrafos import SensorDataDB, SensorLastUpdate
 
 router = APIRouter(prefix="/linigrafos", tags=["linigrafos"])

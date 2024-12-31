@@ -1,11 +1,11 @@
 import logging
+from typing import List, Optional
 
 import requests
-from typing import Optional, List
 from pydantic import ValidationError
 
 from heros.config import Account
-from heros.types.engtec import sensors_data_list, SensorData
+from heros.types.engtec import SensorData, sensors_data_list
 
 API_URL = "https://leituras.spi.engtecnologia.com/api/"
 LOGIN_URL = API_URL + "usuarios/login"

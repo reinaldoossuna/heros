@@ -1,9 +1,8 @@
-from typing import Any, List
-from datetime import datetime, timedelta
 import re
+from datetime import datetime, timedelta
+from typing import Any, List
 
 from pydantic import ValidationError
-
 
 from heros.types.db.metereologico import MetereologicoData
 

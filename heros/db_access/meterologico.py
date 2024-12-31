@@ -1,8 +1,8 @@
 from datetime import datetime
+from typing import Iterable, List, Optional
 
 from psycopg import Connection
 from psycopg.rows import class_row
-from typing import List, Optional, Iterable
 
 from heros.types.db.metereologico import MetereologicoData
 
