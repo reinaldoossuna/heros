@@ -1,29 +1,18 @@
-from dotenv import load_dotenv
-import os
-
-DSN = "postgresql://{user}:{password}@{host}/{database}"
-
-load_dotenv()
+from pydantic import BaseModel, PostgresDsn
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-def spi_config():
-    return {
-        "user": os.getenv("SPI_USER"),
-        "password": os.getenv("SPI_PASSWORD"),
-    }
+class Account(BaseModel):
+    user: str
+    password: str
 
 
-def noaa_config():
-    return {
-        "user": os.getenv("NOAA_USER"),
-        "password": os.getenv("NOAA_PASSWORD"),
-    }
-
-
-def database_url():
-    return DSN.format(
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_DATABASE"),
-        host=os.getenv("DB_HOST"),
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_nested_delimiter="__", env_file=".env", extra="ignore", cli_parse_args=True
     )
+
+    port: int
+    pg_dsn: PostgresDsn
+    engtec: Account
+    noaa: Account
