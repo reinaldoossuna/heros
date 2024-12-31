@@ -28,7 +28,7 @@ async def update_sensores(request):
         last_day = met.last_timestamp(conn)
         last_day = last_day if last_day is not None else datetime.fromtimestamp(0)
 
-    noaamsgs = await noaa.request_data(config.user, config.password, start_date=last_day)
+    noaamsgs = noaa.request_data(config.user, config.password, start_date=last_day)
     if noaamsgs is None:
         return web.Response(status=404, text="Failed to get data from noaa api")
 
@@ -42,7 +42,7 @@ async def update_sensores(request):
 
 async def can_login(request: web.Request) -> web.Response:
     config = settings.noaa
-    s = await noaa.login(config.user, config.password)
+    s = noaa.login(config.user, config.password)
 
     if s is not None:
         return web.Response(text="Login successful")

@@ -1,3 +1,4 @@
+import requests
 from datetime import datetime
 import logging
 from typing import List, Optional
@@ -15,7 +16,7 @@ FIELD_TEST = NOAA_URL + "Account/FieldTest"
 LOGGER = logging.getLogger(__name__)
 
 
-async def request_data(
+def request_data(
     login: str, password: str, *, start_date: datetime, end_date: Optional[datetime] = None
 ) -> Optional[List[MsgNOAA]]:
     end_date = datetime.today() if end_date is None else end_date
@@ -23,9 +24,9 @@ async def request_data(
         start_date=start_date, end_date=end_date, user=login, password=password
     )
 
-    async with aiohttp.ClientSession() as session:
-        async with session.post(FIELD_TEST, data=payload.model_dump(by_alias=True)) as r:
-            resp = await r.json()
+    with requests.Session() as session:
+        with session.post(FIELD_TEST, data=payload.model_dump(by_alias=True)) as r:
+            resp = r.json()
 
             if resp["success"]:
                 LOGGER.debug(f"Msgs receveided: {resp['msgs']}")
@@ -36,16 +37,16 @@ async def request_data(
                 return None
 
 
-async def login(username: str, password: str) -> Optional[aiohttp.ClientSession]:
-    session = aiohttp.ClientSession()
+def login(username: str, password: str) -> Optional[requests.Session]:
+    session = requests.Session()
 
-    r = await session.get(LOGIN_URL)
+    r = session.get(LOGIN_URL)
     payload = {
         "__RequestVerificationToken": r.cookies["__RequestVerificationToken"],
         "UserName": username,
         "Password": password,
     }
-    async with session.post(LOGIN_URL, data=payload) as r:
+    with session.post(LOGIN_URL, data=payload) as r:
         if r.url != URL("https://dcs1.noaa.gov/ACCOUNT/Login"):
             return session
         else:
