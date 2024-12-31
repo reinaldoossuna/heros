@@ -45,6 +45,7 @@ async def can_login(request: web.Request) -> web.Response:
     s = noaa.login(config.user, config.password)
 
     if s is not None:
+        s.close()
         return web.Response(text="Login successful")
 
     return web.Response(status=403, text="Failed to login")
