@@ -25,7 +25,7 @@ async def get_data(request: web.Request):
 
 
 async def update_sensores(request) -> web.Response:
-    datas = await engtec.request_data(settings.engtec)
+    datas = engtec.request_data(settings.engtec)
     if datas is None:
         return web.Response(
             status=400,

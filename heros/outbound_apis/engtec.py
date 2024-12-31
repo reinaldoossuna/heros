@@ -1,6 +1,6 @@
 import logging
 
-import aiohttp
+import requests
 from typing import Optional, List
 from pydantic import ValidationError
 
@@ -14,13 +14,13 @@ DATA_URL = API_URL + "leituras/listar_leituras_por_idempresa"
 LOGGER = logging.getLogger(__name__)
 
 
-async def _login(username: str, password: str) -> Optional[aiohttp.ClientSession]:
+def _login(username: str, password: str) -> Optional[requests.Session]:
     LOGGER.info(f"Logging in as {username}")
-    session = aiohttp.ClientSession()
+    session = requests.Session()
     cred = {"email_usuario": username, "senha": password}
-    async with session.post(LOGIN_URL, json=cred) as r:
+    with session.post(LOGIN_URL, json=cred) as r:
         if r.ok:
-            resp = await r.json()
+            resp = r.json()
             LOGGER.debug(f"got from the server: {resp}")
             token = resp.get("token")
             session.headers["Authorization"] = f"Bearer {token}"
@@ -30,11 +30,11 @@ async def _login(username: str, password: str) -> Optional[aiohttp.ClientSession
             return None
 
 
-async def _request_data(session) -> Optional[List[SensorData]]:
+def _request_data(session: requests.Session) -> Optional[List[SensorData]]:
     LOGGER.info(f"Requesting data from {API_URL}")
-    async with session.get(DATA_URL) as r:
+    with session.get(DATA_URL) as r:
         if r.ok:
-            resp = await r.json()
+            resp = r.json()
             LOGGER.debug(f"got from the server: {resp}")
             raw = resp["result"]
             try:
@@ -48,11 +48,11 @@ async def _request_data(session) -> Optional[List[SensorData]]:
             return None
 
 
-async def request_data(account: Account) -> Optional[List[SensorData]]:
-    session = await _login(account.user, account.password)
+def request_data(account: Account) -> Optional[List[SensorData]]:
+    session = _login(account.user, account.password)
     if session is None:
         return None
 
-    data = await _request_data(session)
-    await session.close()
+    data = _request_data(session)
+    session.close()
     return data
