@@ -16,3 +16,5 @@ class Settings(BaseSettings):
     pg_dsn: PostgresDsn
     engtec: Account
     noaa: Account
+
+settings = Settings()
