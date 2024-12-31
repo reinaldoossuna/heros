@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 import heros.api.linigrafos as linigrafos
 import heros.api.metereologico as met
-from heros.db_access.sql import init_db
 from heros.logging import setup_logging
 import heros.config as cfg
 
@@ -19,7 +18,6 @@ def create_app():
 
     settings = cfg.Settings()
     app["settings"] = settings
-    app.cleanup_ctx.append(init_db)
 
     app.add_routes(
         [
@@ -42,7 +40,6 @@ def main_server():
     LOGGER.info("Starting server ...")
     app = create_app()
     web.run_app(app, port=app["settings"].port)
-
 
 
 if __name__ == "__main__":
