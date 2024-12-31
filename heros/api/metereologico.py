@@ -1,27 +1,29 @@
+from typing import List
 from datetime import datetime
 from itertools import chain
 
 from aiohttp import web
+from fastapi import APIRouter, HTTPException
 
 import heros.db_access.meterologico as met
 import heros.outbound_apis.noaa as noaa
 from heros.config import settings
 from heros.db_access import pool
+from heros.types.db.metereologico import MetereologicoData
 
 
-async def get_data(request):
-    start = request.rel_url.query.get("start", None)
-    end = request.rel_url.query.get("end", None)
+router = APIRouter(prefix="/meterologico", tags=["meterologico"])
 
-    start = datetime.strptime(start, "%d%m%Y") if start else None
-    end = datetime.strptime(end, "%d%m%Y") if end else None
+
+@router.get("/")
+def get_data(start: datetime | None = None, end: datetime | None = None) -> List[MetereologicoData]:
     with pool.connection() as conn:
         data = met.get_data(conn, start, end)
-        dicts = [d.model_dump_json() for d in data]
-        return web.json_response(dicts)
+        return data
 
 
-async def update_sensores(request):
+@router.get("update")
+def update_data():
     config = settings.noaa
 
     with pool.connection() as conn:
@@ -30,22 +32,25 @@ async def update_sensores(request):
 
     noaamsgs = noaa.request_data(config.user, config.password, start_date=last_day)
     if noaamsgs is None:
-        return web.Response(status=404, text="Failed to get data from noaa api")
+        return HTTPException(
+            status_code=400,
+            detail="Failed to get data from NOAA api",
+        )
 
     datas = chain.from_iterable(map(lambda m: m.model_dump(), noaamsgs))
 
     with pool.connection() as conn:
         met.insert_update_data(conn, datas)
 
-    return web.Response()
 
-
-async def can_login(request: web.Request) -> web.Response:
+@router.get("/can_login")
+def can_login():
     config = settings.noaa
     s = noaa.login(config.user, config.password)
 
-    if s is not None:
-        s.close()
-        return web.Response(text="Login successful")
-
-    return web.Response(status=403, text="Failed to login")
+    if s is None:
+        return HTTPException(
+            status_code=400,
+            detail="Failed to login",
+        )
+    s.close()
