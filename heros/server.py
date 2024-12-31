@@ -17,8 +17,8 @@ LOGGER = logging.getLogger(__name__)
 def create_app():
     app = web.Application()
 
-    app["noaa_cfg"] = cfg.noaa_config()
-    app["spi_config"] = cfg.spi_config()
+    settings = cfg.Settings()
+    app["settings"] = settings
     app.cleanup_ctx.append(init_db)
 
     app.add_routes(
@@ -41,7 +41,7 @@ def main_server():
     setup_logging()
     LOGGER.info("Starting server ...")
     app = create_app()
-    web.run_app(app, port=8080)
+    web.run_app(app, port=app["settings"].port)
 
 
 
