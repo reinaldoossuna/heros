@@ -17,4 +17,5 @@ class Settings(BaseSettings):
     engtec: Account
     noaa: Account
 
-settings = Settings()
+
+settings = Settings()  # pyright: ignore[reportCallIssue]
