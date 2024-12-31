@@ -2,7 +2,6 @@ from typing import List
 from datetime import datetime
 from itertools import chain
 
-from aiohttp import web
 from fastapi import APIRouter, HTTPException
 
 import heros.db_access.meterologico as met

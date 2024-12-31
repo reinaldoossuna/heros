@@ -5,7 +5,6 @@ from typing import List, Optional
 
 from yarl import URL
 
-import aiohttp
 from heros.types.noaa import MsgNOAA, RequestsFields, msgsnoaa_list
 
 NOAA_URL = "https://dcs1.noaa.gov/"
