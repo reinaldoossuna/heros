@@ -10,7 +10,7 @@ from heros.config import settings
 from heros.db_access import pool
 from heros.types.db.metereologico import MetereologicoData
 
-router = APIRouter(prefix="/meterologico", tags=["meterologico"])
+router = APIRouter(prefix="/metereologico", tags=["metereologico"])
 
 
 @router.get("/")
