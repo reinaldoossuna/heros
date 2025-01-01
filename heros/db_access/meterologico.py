@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Iterable, List, Optional
 
 from psycopg import Connection
-from psycopg.rows import class_row
+from psycopg.rows import class_row, scalar_row
 
 from heros.types.db.metereologico import MetereologicoData
 
@@ -26,7 +26,7 @@ def get_data(
 
 
 def last_timestamp(conn: Connection) -> Optional[datetime]:
-    with conn.cursor(row_factory=class_row(datetime)) as cur:
+    with conn.cursor(row_factory=scalar_row) as cur:
         cur.execute("""
         SELECT dm."Data"
         FROM hydronet.public.dados_met dm
