@@ -16,7 +16,7 @@ def get_data(
         SELECT *
         FROM hydronet.public.dados_met ds
         WHERE
-        ds."DATA" BETWEEN
+        ds."Data" BETWEEN
                     COALESCE(%s, to_timestamp(0)::date)
                     AND COALESCE(%s, CURRENT_TIMESTAMP);
         """,
