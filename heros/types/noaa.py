@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 from enum import StrEnum
-from typing import TYPE_CHECKING, Annotated, Any, List, Literal, Optional
+from typing import Annotated, Any, List, Optional
 
 from pydantic import (
     BaseModel,
@@ -9,7 +9,8 @@ from pydantic import (
     Field,
     PlainSerializer,
     TypeAdapter,
-    model_serializer,
+    ValidationInfo,
+    field_validator,
 )
 
 from heros.types.db.metereologico import MetereologicoData
@@ -58,7 +59,7 @@ class MsgNOAA(BaseModel):
     scid: int = Field(alias="TblDcpDataScid")
     frameChar: str = Field(alias="TblDcpDataFrameChar")
     dataLen: int = Field(alias="TblDcpDataDataLen")
-    data: str = Field(alias="TblDcpDataData")
+    data: List[MetereologicoData] = Field(alias="TblDcpDataData")
     timeMsgCar: float = Field(alias="TblDcpDataTimeMsgCar")
     timeMsgEnd: float = Field(alias="TblDcpDataTimeMsgEnd")
     id: int = Field(alias="Id")
@@ -68,34 +69,24 @@ class MsgNOAA(BaseModel):
     updateTime: Optional[float] = Field(alias="UpdateTime")
     dateCreated: str = Field(alias="DateCreated")
 
-    @model_serializer
-    def ser_model(self) -> List[MetereologicoData]:
-        if self.processInfo is not MsgType.Good:
-            LOGGER.info(f"Msg type is {self.processInfo}, we wont try to parse")
-            LOGGER.info(f"DATA: {self.data}")
-            LOGGER.info("If you thing this is a mistake check the parser in the types module")
-            return []
-
-        lists_data = parse_clean_data(self.data)
-        return metdatadb_from(self.dtMsgCar, lists_data)
-
-    if TYPE_CHECKING:
-        # Ensure type checkers see the correct return type
-        def model_dump(  # type: ignore
-            self,
-            *,
-            mode: Literal["json", "python"] | str = "python",
-            include: Any = None,
-            exclude: Any = None,
-            context: dict[str, Any] | None = None,
-            by_alias: bool = False,
-            exclude_unset: bool = False,
-            exclude_defaults: bool = False,
-            exclude_none: bool = False,
-            round_trip: bool = False,
-            warnings: bool | Literal["none", "warn", "error"] = True,
-            serialize_as_any: bool = False,
-        ) -> tuple: ...
+    @field_validator("data", mode="before")
+    @classmethod
+    def parse_str(cls, value: str, info: ValidationInfo) -> List[MetereologicoData]:
+        msgtype = info.data["processInfo"]
+        match msgtype:
+            case MsgType.Good:
+                LOGGER.info("Parsing data field")
+                LOGGER.debug(f"Raw: {value}")
+                lists_data = parse_clean_data(value)
+                LOGGER.debug(f"cleaned: {lists_data}")
+                metdata = metdatadb_from(info.data["dtMsgCar"], lists_data)
+                LOGGER.debug(f"Data: {metdata}")
+                return metdata
+            case _:
+                LOGGER.info(f"Msg type is {msgtype}, we wont try to parse")
+                LOGGER.info(f"DATA: {value}")
+                LOGGER.info("If you thing this is a mistake check the parser in the types module")
+                return []
 
 
 msgsnoaa_list = TypeAdapter(List[MsgNOAA])
