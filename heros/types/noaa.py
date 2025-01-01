@@ -31,6 +31,12 @@ class MsgType(StrEnum):
     Text = "T"
     A = "A"
     Dirty = "?"
+    Unknown = "Unknown"
+
+    @classmethod
+    def _missing_(cls, value: object) -> Any:
+        LOGGER.info(f"Msg type unknown {value}, it should be a good idea add this new type")
+        return cls.Unknown
 
 
 NOAA_msgtype = Annotated[MsgType, BeforeValidator(MsgType)]
