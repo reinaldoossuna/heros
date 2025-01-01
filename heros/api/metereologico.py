@@ -20,7 +20,7 @@ def get_data(start: datetime | None = None, end: datetime | None = None) -> List
         return data
 
 
-@router.get("update")
+@router.get("/update")
 def update_data():
     config = settings.noaa
 
