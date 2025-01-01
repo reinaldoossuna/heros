@@ -3,7 +3,6 @@ from datetime import datetime
 from typing import List, Optional
 
 import requests
-from yarl import URL
 
 from heros.types.noaa import MsgNOAA, RequestsFields, msgsnoaa_list
 
@@ -46,7 +45,7 @@ def login(username: str, password: str) -> Optional[requests.Session]:
         "Password": password,
     }
     with session.post(LOGIN_URL, data=payload) as r:
-        if r.url != URL("https://dcs1.noaa.gov/ACCOUNT/Login"):
+        if r.url != "https://dcs1.noaa.gov/ACCOUNT/Login":
             return session
         else:
             LOGGER.error("Failed to login, probably the password has changed")
