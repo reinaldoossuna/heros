@@ -34,11 +34,11 @@ def update_data():
             status_code=400,
             detail="Failed to get data from NOAA api",
         )
-
-    datas = chain.from_iterable(map(lambda m: m.model_dump(), noaamsgs))
+    listlistdata = [msg.data for msg in noaamsgs]
+    chained = chain.from_iterable(listlistdata)
 
     with pool.connection() as conn:
-        met.insert_update_data(conn, datas)
+        met.insert_update_data(conn, chained)
 
 
 @router.get("/can_login")

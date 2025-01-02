@@ -36,8 +36,7 @@ def last_timestamp(conn: Connection) -> Optional[datetime]:
         return cur.fetchone()
 
 
-# TODO: Should recieve MetereologicoData
-def insert_update_data(conn: Connection, datas: Iterable[tuple]):
+def insert_update_data(conn: Connection, datas: Iterable[MetereologicoData]):
     with conn.cursor() as cur:
         cur.executemany(
             """
@@ -84,6 +83,6 @@ def insert_update_data(conn: Connection, datas: Iterable[tuple]):
         COALESCE(EXCLUDED."Bateria (v)",
         t."Bateria (v)"));
         """,
-            datas,
+            map(lambda d: d.model_dump(), datas),
         )
         conn.commit()
