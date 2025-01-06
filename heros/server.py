@@ -21,4 +21,4 @@ def startup_event():
 
 def main_server():
     LOGGER.info("Starting server")
-    uvicorn.run(app, port=settings.port, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=settings.port, log_level="info")
