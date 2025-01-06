@@ -52,17 +52,7 @@ def ensure_datetime(value: Any):
 
 
 def metdatadb_from(date: datetime, lists_data: List[List[float]]) -> List[MetereologicoData]:
-    # keys = [field.alias for _, field in MetereologicoData.__pydantic_fields__.items()]
-    keys = [
-        "Data",
-        "Pressão atmosférica (bar)",
-        "Temperatura do ar (°C)",
-        "Umidade relativa do ar (%)",
-        "Precipitação (mm)",
-        "Velocidade do vento (m/s)",
-        "Direção do vento (˚)",
-        "Bateria (v)",
-    ]
+    keys = MetereologicoData.__pydantic_fields__.keys()
     deltas = [timedelta(hours=-2), timedelta(hours=-1), timedelta(hours=0)]
 
     dates = [date + delta for delta in deltas]

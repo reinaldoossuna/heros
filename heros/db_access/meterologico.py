@@ -14,11 +14,12 @@ def get_data(
         cur.execute(
             """
         SELECT *
-        FROM hydronet.public.dados_met ds
+        FROM wxt530 ds
         WHERE
-        ds."Data" BETWEEN
+        ds.data BETWEEN
                     COALESCE(%s, to_timestamp(0)::date)
-                    AND COALESCE(%s, CURRENT_TIMESTAMP);
+                    AND COALESCE(%s, CURRENT_TIMESTAMP)
+        ORDER BY ds.data DESC;
         """,
             (start, end),
         )
@@ -28,9 +29,9 @@ def get_data(
 def last_timestamp(conn: Connection) -> Optional[datetime]:
     with conn.cursor(row_factory=scalar_row) as cur:
         cur.execute("""
-        SELECT dm."Data"
-        FROM hydronet.public.dados_met dm
-        ORDER BY dm."Data" DESC
+        SELECT ds.data
+        FROM wxt530 ds
+        ORDER BY ds.data DESC
         LIMIT 1;
         """)
         return cur.fetchone()
@@ -40,48 +41,37 @@ def insert_update_data(conn: Connection, datas: Iterable[MetereologicoData]):
     with conn.cursor() as cur:
         cur.executemany(
             """
-        INSERT
-        INTO
-        hydronet.public.dados_met as t
+        INSERT INTO wxt530 as t
        (
-            "Data",
-            "Pressão atmosférica (bar)",
-            "Temperatura do ar (°C)",
-            "Umidade relativa do ar (%%)",
-            "Precipitação (mm)",
-            "Velocidade do vento (m/s)",
-            "Direção do vento (˚)",
-            "Bateria (v)"
+            "data",
+            "pressao_atmosferica",
+            "temperatura",
+            "umidade_ar",
+            "precipitacao",
+            "velocidade_vento",
+            "direcao_vento",
+            "bateria" 
        )
         VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
-        ON
-        CONFLICT ("Data")
-        DO
-        UPDATE
-        SET
-            (
-                "Pressão atmosférica (bar)",
-                "Temperatura do ar (°C)",
-                "Umidade relativa do ar (%%)",
-                "Precipitação (mm)",
-                "Velocidade do vento (m/s)",
-                "Direção do vento (˚)",
-                "Bateria (v)"
+        ON CONFLICT ("data") DO UPDATE
+        SET (
+            "pressao_atmosferica",
+            "temperatura",
+            "umidade_ar",
+            "precipitacao",
+            "velocidade_vento",
+            "direcao_vento",
+            "bateria"
             ) =
-        (COALESCE(EXCLUDED."Pressão atmosférica (bar)",
-        t."Pressão atmosférica (bar)"),
-        COALESCE(EXCLUDED."Temperatura do ar (°C)",
-        t."Temperatura do ar (°C)"),
-        COALESCE(EXCLUDED."Umidade relativa do ar (%%)",
-        t."Umidade relativa do ar (%%)"),
-        COALESCE(EXCLUDED."Precipitação (mm)",
-        t."Precipitação (mm)"),
-        COALESCE(EXCLUDED."Velocidade do vento (m/s)",
-        t."Velocidade do vento (m/s)"),
-        COALESCE(EXCLUDED."Direção do vento (˚)",
-        t."Direção do vento (˚)"),
-        COALESCE(EXCLUDED."Bateria (v)",
-        t."Bateria (v)"));
+        (
+            COALESCE(EXCLUDED.pressao_atmosferica, t.pressao_atmosferica),
+            COALESCE(EXCLUDED.temperatura, t.temperatura),
+            COALESCE(EXCLUDED.umidade_ar, t.umidade_ar),
+            COALESCE(EXCLUDED.precipitacao, t.precipitacao),
+            COALESCE(EXCLUDED.velocidade_vento, t.velocidade_vento),
+            COALESCE(EXCLUDED.direcao_vento, t.direcao_vento),
+            COALESCE(EXCLUDED.bateria, t.bateria)
+            );
         """,
             map(lambda d: d.model_dump(), datas),
         )

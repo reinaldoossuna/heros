@@ -18,7 +18,7 @@ def get_data(
         cur.execute(
             """
         SELECT data_leitura, mac, valor_leitura
-        FROM hydronet.public.dados_sensores ds
+        FROM linigrafos ds
         WHERE
         ds.data_leitura BETWEEN
                     COALESCE(%s, to_timestamp(0)::date)
@@ -32,8 +32,9 @@ def get_data(
 def get_sensors_lastupdate(conn) -> List[SensorLastUpdate]:
     with conn.cursor(row_factory=class_row(SensorLastUpdate)) as cur:
         cur.execute("""
-        SELECT mac, data
-        FROM hydronet.public.sensores_last_use;
+        SELECT mac,  max(data_leitura) AS data
+        FROM linigrafos
+        GROUP BY mac;
         """)
         return cur.fetchall()
 
@@ -42,7 +43,7 @@ def insert_data(conn: Connection, datas: Iterable[SensorData]):
     with conn.cursor() as cur:
         cur.executemany(
             """
-        INSERT INTO dados_sensores
+        INSERT INTO linigrafos
                ("mac", "canal", "valor_leitura", "data_leitura", "sub_id_disp")
         VALUES (%s,         %s,              %s,             %s,           NULLIF(%s, 'xxxxxxxxxx'))
         ON CONFLICT ("mac", "data_leitura") DO NOTHING;
