@@ -6,3 +6,9 @@ from heros.config import settings
 
 pool = ConnectionPool(settings.pg_dsn.unicode_string())
 atexit.register(pool.close)
+
+
+def create_tables():
+    with pool.connection() as con:
+        con.execute(open("./migrations/create_tables.sql", "r").read())
+        con.commit()
