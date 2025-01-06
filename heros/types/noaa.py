@@ -82,6 +82,12 @@ class MsgNOAA(BaseModel):
                 metdata = metdatadb_from(info.data["dtMsgCar"], lists_data)
                 LOGGER.debug(f"Data: {metdata}")
                 return metdata
+            case MsgType.Text | MsgType.Message:
+                # Text and Message is never data
+                LOGGER.debug(f"Msg type is {msgtype}, we wont try to parse")
+                LOGGER.debug(f"DATA: {value}")
+                return []
+
             case _:
                 LOGGER.info(f"Msg type is {msgtype}, we wont try to parse")
                 LOGGER.info(f"DATA: {value}")
