@@ -38,7 +38,9 @@ ignore = ["E501"]
 [dependency-groups]
 dev = [
     "pyright>=1.1.391",
-    "python-language-server>=0.36.2",
+    "python-language-server[pycodestyle,rope]>=0.36.2",
+    "pytest>=8.3.4",
+    "setuptools>=75.6.0",
 ]
 
 [tool.setuptools.packages.find]
