@@ -1,0 +1,5 @@
+# exclude virtual environment from image
+.venv
+
+# exclude env variables
+.env
