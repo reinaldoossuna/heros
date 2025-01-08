@@ -8,6 +8,7 @@ import heros.db_access.meterologico as met
 import heros.outbound_apis.noaa as noaa
 from heros.config import settings
 from heros.db_access import pool
+from heros.logging import LOGGER
 from heros.types.db.metereologico import MetereologicoData
 
 router = APIRouter(prefix="/metereologico", tags=["metereologico"])
@@ -15,8 +16,13 @@ router = APIRouter(prefix="/metereologico", tags=["metereologico"])
 
 @router.get("/")
 def get_data(start: datetime | None = None, end: datetime | None = None) -> List[MetereologicoData]:
+    LOGGER.info("Requesting metereologico data from db")
+    LOGGER.info(f"start: {start}")
+    LOGGER.info(f"end: {end}")
     with pool.connection() as conn:
         data = met.get_data(conn, start, end)
+        LOGGER.debug(f"Data: {data}")
+        LOGGER.info("Sending data")
         return data
 
 
