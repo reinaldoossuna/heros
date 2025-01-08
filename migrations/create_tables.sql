@@ -25,7 +25,7 @@ COMMENT ON COLUMN wxt530.bateria IS 'Bateria do aparelho (v)';
 
 -- Timescale hypertable
 SELECT create_hypertable('wxt530', by_range('data'), if_not_exists => TRUE);
-CREATE INDEX IF NOT EXISTS ix_wxt530_time ON wxt530 (data DESC);
+CREATE INDEX IF NOT EXISTS ix_wxt530_time ON wxt530 (data ASC);
 
 ALTER TABLE wxt530 SET (
   timescaledb.compress
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS linigrafos (
 
 -- Timescale hypertable
 SELECT create_hypertable('linigrafos', by_range('data_leitura'), if_not_exists => TRUE);
-CREATE INDEX IF NOT EXISTS ix_linigrafos_time ON linigrafos (mac, data_leitura DESC);
+CREATE INDEX IF NOT EXISTS ix_linigrafos_time ON linigrafos (mac, data_leitura ASC);
 
 ALTER TABLE linigrafos SET (
   timescaledb.compress,

@@ -22,7 +22,8 @@ def get_data(
         WHERE
         ds.data_leitura BETWEEN
                     COALESCE(%s, to_timestamp(0)::date)
-                    AND COALESCE(%s, CURRENT_TIMESTAMP);
+                    AND COALESCE(%s, CURRENT_TIMESTAMP)
+        ORDER BY ds.mac, ds.data_leitura ASC;
         """,
             (start, end),
         )

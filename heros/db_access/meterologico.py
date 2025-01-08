@@ -19,7 +19,7 @@ def get_data(
         ds.data BETWEEN
                     COALESCE(%s, to_timestamp(0)::date)
                     AND COALESCE(%s, CURRENT_TIMESTAMP)
-        ORDER BY ds.data DESC;
+        ORDER BY ds.data ASC;
         """,
             (start, end),
         )
