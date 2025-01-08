@@ -41,29 +41,13 @@ def insert_update_data(conn: Connection, datas: Iterable[MetereologicoData]):
     with conn.cursor() as cur:
         cur.executemany(
             """
-        INSERT INTO wxt530 as t
-       (
-            "data",
-            "pressao_atmosferica",
-            "temperatura",
-            "umidade_ar",
-            "precipitacao",
-            "velocidade_vento",
-            "direcao_vento",
-            "bateria" 
-       )
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
-        ON CONFLICT ("data") DO UPDATE
-        SET (
-            "pressao_atmosferica",
-            "temperatura",
-            "umidade_ar",
-            "precipitacao",
-            "velocidade_vento",
-            "direcao_vento",
-            "bateria"
-            ) =
-        (
+INSERT INTO wxt530 AS t
+            ("data", "pressao_atmosferica",     "temperatura", "umidade_ar", "precipitacao", "velocidade_vento", "direcao_vento", "bateria")
+    VALUES (%(data)s, %(pressao_atmosferica)s, %(temperatura)s, %(umidade_ar)s, %(precipitacao)s, %(velocidade_vento)s, %(direcao_vento)s, %(bateria)s)
+ON CONFLICT ("data")
+    DO UPDATE SET
+        ("pressao_atmosferica", "temperatura", "umidade_ar", "precipitacao", "velocidade_vento", "direcao_vento", "bateria")
+            = (
             COALESCE(EXCLUDED.pressao_atmosferica, t.pressao_atmosferica),
             COALESCE(EXCLUDED.temperatura, t.temperatura),
             COALESCE(EXCLUDED.umidade_ar, t.umidade_ar),

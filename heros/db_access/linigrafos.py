@@ -45,10 +45,10 @@ def insert_data(conn: Connection, datas: Iterable[SensorData]):
         cur.executemany(
             """
         INSERT INTO linigrafos
-               ("mac", "canal", "valor_leitura", "data_leitura", "sub_id_disp")
-        VALUES (%s,         %s,              %s,             %s,           NULLIF(%s, 'xxxxxxxxxx'))
+               ( "mac",    "canal",  "valor_leitura",   "data_leitura",   "sub_id_disp")
+        VALUES (%(mac)s, %(canal)s, %(valor_leitura)s, %(data_leitura)s, %(sub_id_disp)s)
         ON CONFLICT ("mac", "data_leitura") DO NOTHING;
         """,
-            [data.model_dump() for data in datas],
+            map(lambda d: d.model_dump(), datas),
         )
         conn.commit()

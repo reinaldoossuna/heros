@@ -15,9 +15,6 @@ class SensorData(BaseModel):
     data_leitura: datetime
     sub_id_disp: str
 
-    @model_serializer
-    def ser_model(self) -> tuple:
-        return (self.mac, self.canal, self.valor_leitura, self.data_leitura, self.sub_id_disp)
 
 
 sensors_data_list = TypeAdapter(List[SensorData])
