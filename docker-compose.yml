@@ -20,11 +20,16 @@ services:
     volumes:
       - db-data:/home/postgres/pgdata/data
 
-  adminer:
-    image: adminer
+  pgadmin:
+    image: docker://dpage/pgadmin4:8.14.0
     restart: always
+    env_file: .env.prod
     ports:
-      - 8888:8080
+      - 8888:80
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
 
 volumes:
     db-data:
+    pgadmin-data:
