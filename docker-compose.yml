@@ -29,6 +29,16 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
 
+  frontend:
+    image: frontend
+    restart: always
+    ports:
+      - 4000:80
+    build:
+        context: frontend
+        args:
+            - VITE_API_URL=server:8000
+            - NODE_ENV=production
 
 volumes:
     db-data:
