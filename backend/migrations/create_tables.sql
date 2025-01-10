@@ -94,3 +94,43 @@ BEFORE INSERT
 ON linigrafos
 FOR EACH ROW
 EXECUTE FUNCTION posicao_or_null();
+
+-- Update Log table
+CREATE EXTENSION IF NOT EXISTS hstore;
+
+CREATE TABLE IF NOT EXISTS tables_infos (
+	   table_name TEXT PRIMARY KEY,
+	   attr hstore
+	   );
+
+INSERT INTO tables_infos(table_name, attr)
+VALUES
+	('linigrafos', ''),
+	('wxt530', '')
+ON CONFLICT DO NOTHING;
+
+CREATE OR REPLACE FUNCTION stamp_update_log()
+RETURNS  TRIGGER
+LANGUAGE PLPGSQL
+AS
+$$
+BEGIN
+	UPDATE tables_infos
+	SET attr = attr || hstore(
+						'last_update',
+						to_char(CURRENT_TIMESTAMP, 'YYYY-MM-DD"T"HH24:MI'))
+	WHERE table_name = TG_TABLE_NAME;
+	RETURN NEW;
+END
+$$;
+
+CREATE OR REPLACE TRIGGER linigrafos_update_log
+AFTER INSERT ON linigrafos
+FOR EACH STATEMENT
+EXECUTE PROCEDURE stamp_update_log();
+
+
+CREATE OR REPLACE TRIGGER wxt530_update_log
+AFTER INSERT ON wxt530
+FOR EACH STATEMENT
+EXECUTE PROCEDURE stamp_update_log();
