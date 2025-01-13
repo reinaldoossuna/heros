@@ -7,7 +7,7 @@ from fastapi import APIRouter, HTTPException
 import heros.db_access.meterologico as met
 import heros.outbound_apis.noaa as noaa
 from heros.config import settings
-from heros.db_access import pool
+from heros.db_access import pool, date_lastupdate
 from heros.logging import LOGGER
 from heros.types.db.metereologico import MetereologicoData
 
@@ -46,15 +46,17 @@ def update_data():
     with pool.connection() as conn:
         met.insert_update_data(conn, chained)
 
+@router.get("/update/last")
+def last_update() -> datetime:
+    with pool.connection() as conn:
+        return date_lastupdate(conn, 'wxt530')
+
 
 @router.get("/can_login")
-def can_login():
+def can_login() -> bool:
     config = settings.noaa
     s = noaa.login(config.user, config.password)
-
-    if s is None:
-        return HTTPException(
-            status_code=400,
-            detail="Failed to login",
-        )
+    result = s is not None
     s.close()
+
+    return result

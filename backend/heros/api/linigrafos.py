@@ -3,6 +3,7 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
+from heros.db_access import date_lastupdate
 import heros.db_access.linigrafos as lini
 import heros.outbound_apis.engtec as engtec
 from heros.config import settings
@@ -41,6 +42,10 @@ def update_data():
         lini.insert_data(conn, datas)
     LOGGER.info("Updated done")
 
+@router.get("/update/last")
+def last_update() -> datetime:
+    with pool.connection() as conn:
+        return date_lastupdate(conn, 'linigrafos')
 
 @router.get("/lastupdate")
 def sensors_lastupdate() -> List[SensorLastUpdate]:
