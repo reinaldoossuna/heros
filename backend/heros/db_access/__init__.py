@@ -14,7 +14,7 @@ atexit.register(pool.close)
 
 def create_tables():
     with pool.connection() as con:
-        con.execute(open("./migrations/create_tables.sql", "r").read())
+        con.execute(open("./migrations/create_tables.sql", "r").read())  # pyright: ignore
         con.commit()
 
 
