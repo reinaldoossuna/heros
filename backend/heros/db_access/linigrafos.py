@@ -5,19 +5,19 @@ from psycopg import Connection
 from psycopg.rows import class_row
 
 from heros.types.db.linigrafos import (
-    SensorDataDB,
-    SensorLastUpdate,
+    LinigrafoData,
+    LinigrafoLastUpdate,
 )
 from heros.types.engtec import SensorData
 
 
 def get_data(
     conn: Connection, start: Optional[datetime] = None, end: Optional[datetime] = None
-) -> List[SensorDataDB]:
-    with conn.cursor(row_factory=class_row(SensorDataDB)) as cur:
+) -> List[LinigrafoData]:
+    with conn.cursor(row_factory=class_row(LinigrafoData)) as cur:
         cur.execute(
             """
-        SELECT data_leitura, mac, valor_leitura
+        SELECT data_leitura, mac, valor_leitura, sub_id_disp as local
         FROM linigrafos ds
         WHERE
         ds.data_leitura BETWEEN
@@ -30,8 +30,31 @@ def get_data(
         return cur.fetchall()
 
 
-def get_sensors_lastupdate(conn) -> List[SensorLastUpdate]:
-    with conn.cursor(row_factory=class_row(SensorLastUpdate)) as cur:
+def get_local_data(
+    conn: Connection,
+    local: str,
+    start: Optional[datetime] = None,
+    end: Optional[datetime] = None,
+) -> List[LinigrafoData]:
+    with conn.cursor(row_factory=class_row(LinigrafoData)) as cur:
+        cur.execute(
+            """
+        SELECT data_leitura, mac, valor_leitura, sub_id_disp as local
+        FROM linigrafos ds
+        WHERE
+        local = %s AND
+        ds.data_leitura BETWEEN
+                    COALESCE(%s, to_timestamp(0)::date)
+                    AND COALESCE(%s, CURRENT_TIMESTAMP)
+        ORDER BY ds.data_leitura ASC;
+        """,
+            (local, start, end),
+        )
+        return cur.fetchall()
+
+
+def get_sensors_lastupdate(conn) -> List[LinigrafoLastUpdate]:
+    with conn.cursor(row_factory=class_row(LinigrafoLastUpdate)) as cur:
         cur.execute("""
         SELECT mac,  max(data_leitura) AS data
         FROM linigrafos

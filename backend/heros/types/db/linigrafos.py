@@ -1,29 +1,24 @@
 from datetime import datetime
-from typing import List
+from typing import Optional
 
-from pydantic import BaseModel, TypeAdapter
+from pydantic import BaseModel
 
 
-class SensorDataDB(BaseModel):
+class LinigrafoData(BaseModel):
     """
     Sensor in the db.
     """
 
     data_leitura: datetime
     mac: str
+    local: Optional[str]
     valor_leitura: float
 
 
-sensors_datadb_list = TypeAdapter(List[SensorDataDB])
-
-
-class SensorLastUpdate(BaseModel):
+class LinigrafoLastUpdate(BaseModel):
     """
     Sensor in the db.
     """
 
     mac: str
     data: datetime
-
-
-sensors_lastupdate_list = TypeAdapter(List[SensorLastUpdate])
