@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from pydantic import BaseModel, TypeAdapter, model_serializer
+from pydantic import BaseModel, TypeAdapter
 
 
 class SensorData(BaseModel):
