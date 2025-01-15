@@ -39,6 +39,9 @@ CREATE TABLE IF NOT EXISTS posicoes (
 	nome bpchar(12) NOT NULL,
 	latitude float4 NULL,
 	longitude float4 NULL,
+	sensor_mac bpchar(12) NULL,
+
+	CONSTRAINT one_pos_mac UNIQUE (sensor_mac),
 	CONSTRAINT posicoes_pk PRIMARY KEY (nome)
 );
 
@@ -83,7 +86,7 @@ AS
 $$
 BEGIN
 	IF (SELECT nome FROM posicoes WHERE posicoes.nome = NEW.sub_id_disp) IS NULL THEN
-	   NEW.sub_id_disp = NULL;
+	   NEW.sub_id_disp = (SELECT nome FROM posicoes WHERE posicoes.sensor_mac = NEW.mac);
 	END IF;
 	RETURN NEW;
 END;
