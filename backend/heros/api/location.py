@@ -1,9 +1,8 @@
 from typing import List
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from psycopg.rows import class_row
 
 from heros.db_access import pool
-from heros.logging import LOGGER
 from heros.types.db.location import LocationData
 
 router = APIRouter(prefix="/location", tags=["locations"])

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, HTTPException
 
@@ -9,13 +9,13 @@ import heros.outbound_apis.engtec as engtec
 from heros.config import settings
 from heros.db_access import pool
 from heros.logging import LOGGER
-from heros.types.db.linigrafos import SensorDataDB, SensorLastUpdate
+from heros.types.db.linigrafos import LinigrafoData, LinigrafoLastUpdate
 
 router = APIRouter(prefix="/linigrafos", tags=["linigrafos"])
 
 
 @router.get("/")
-def get_data(start: datetime | None = None, end: datetime | None = None) -> List[SensorDataDB]:
+def get_data(start: datetime | None = None, end: datetime | None = None) -> List[LinigrafoData]:
     LOGGER.info("Requesting data from db")
     LOGGER.info(f"start: {start}")
     LOGGER.info(f"end: {end}")
@@ -43,12 +43,12 @@ def update_data():
     LOGGER.info("Updated done")
 
 @router.get("/update/last")
-def last_update() -> datetime:
+def last_update() -> Optional[datetime]:
     with pool.connection() as conn:
         return date_lastupdate(conn, 'linigrafos')
 
 @router.get("/lastupdate")
-def sensors_lastupdate() -> List[SensorLastUpdate]:
+def sensors_lastupdate() -> List[LinigrafoLastUpdate]:
     LOGGER.info("Sensors lastupdate requested, getting data in db")
     with pool.connection() as conn:
         data = lini.get_sensors_lastupdate(conn)

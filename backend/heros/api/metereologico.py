@@ -1,6 +1,6 @@
 from datetime import datetime
 from itertools import chain
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, HTTPException
 
@@ -15,7 +15,9 @@ router = APIRouter(prefix="/metereologico", tags=["metereologico"])
 
 
 @router.get("/")
-def get_data(start: datetime | None = None, end: datetime | None = None) -> List[MetereologicoData]:
+def get_data(
+    start: datetime | None = None, end: datetime | None = None
+) -> List[MetereologicoData]:
     LOGGER.info("Requesting metereologico data from db")
     LOGGER.info(f"start: {start}")
     LOGGER.info(f"end: {end}")
@@ -46,10 +48,11 @@ def update_data():
     with pool.connection() as conn:
         met.insert_update_data(conn, chained)
 
+
 @router.get("/update/last")
-def last_update() -> datetime:
+def last_update() -> Optional[datetime]:
     with pool.connection() as conn:
-        return date_lastupdate(conn, 'wxt530')
+        return date_lastupdate(conn, "wxt530")
 
 
 @router.get("/can_login")
@@ -57,6 +60,6 @@ def can_login() -> bool:
     config = settings.noaa
     s = noaa.login(config.user, config.password)
     result = s is not None
-    s.close()
+    s.close() if result else None
 
     return result
