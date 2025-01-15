@@ -103,13 +103,14 @@ CREATE EXTENSION IF NOT EXISTS hstore;
 
 CREATE TABLE IF NOT EXISTS tables_infos (
 	   table_name TEXT PRIMARY KEY,
+	   last_update TIMESTAMPTZ NULL,
 	   attr hstore
 	   );
 
-INSERT INTO tables_infos(table_name, attr)
+INSERT INTO tables_infos(table_name)
 VALUES
-	('linigrafos', ''),
-	('wxt530', '')
+	('linigrafos'),
+	('wxt530')
 ON CONFLICT DO NOTHING;
 
 CREATE OR REPLACE FUNCTION stamp_update_log()
@@ -119,9 +120,7 @@ AS
 $$
 BEGIN
 	UPDATE tables_infos
-	SET attr = attr || hstore(
-						'last_update',
-						to_char(CURRENT_TIMESTAMP, 'YYYY-MM-DD"T"HH24:MI'))
+	SET last_update = CURRENT_TIMESTAMP
 	WHERE table_name = TG_TABLE_NAME;
 	RETURN NEW;
 END
