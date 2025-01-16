@@ -15,13 +15,29 @@ router = APIRouter(prefix="/linigrafos", tags=["linigrafos"])
 
 
 @router.get("/")
-def get_data(start: datetime | None = None, end: datetime | None = None) -> List[LinigrafoData]:
+def get_data(
+    start: datetime | None = None, end: datetime | None = None
+) -> List[LinigrafoData]:
     LOGGER.info("Requesting data from db")
     LOGGER.info(f"start: {start}")
     LOGGER.info(f"end: {end}")
 
     with pool.connection() as conn:
         data = lini.get_data(conn, start, end)
+        LOGGER.info("Sending data")
+        return data
+
+
+@router.get("/{local}")
+def get_local_data(
+    local: str, start: datetime | None = None, end: datetime | None = None
+) -> List[LinigrafoData]:
+    LOGGER.info(f"Requesting {local} data from db")
+    LOGGER.info(f"start: {start}")
+    LOGGER.info(f"end: {end}")
+
+    with pool.connection() as conn:
+        data = lini.get_local_data(conn, local, start, end)
         LOGGER.info("Sending data")
         return data
 
@@ -42,10 +58,12 @@ def update_data():
         lini.insert_data(conn, datas)
     LOGGER.info("Updated done")
 
+
 @router.get("/update/last")
 def last_update() -> Optional[datetime]:
     with pool.connection() as conn:
-        return date_lastupdate(conn, 'linigrafos')
+        return date_lastupdate(conn, "linigrafos")
+
 
 @router.get("/lastupdate")
 def sensors_lastupdate() -> List[LinigrafoLastUpdate]:
