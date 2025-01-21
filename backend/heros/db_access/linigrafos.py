@@ -42,7 +42,7 @@ def get_local_data(
         SELECT data_leitura, mac, valor_leitura, sub_id_disp as local
         FROM linigrafos ds
         WHERE
-        local = %s AND
+        sub_id_disp = %s AND
         ds.data_leitura BETWEEN
                     COALESCE(%s, to_timestamp(0)::date)
                     AND COALESCE(%s, CURRENT_TIMESTAMP)
