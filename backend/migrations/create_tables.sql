@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS posicoes (
 INSERT INTO posicoes (nome,latitude,longitude) VALUES
 	 ('soter',-20.43788,-54.58097),
 	 ('hemosul',-20.46824,-54.60931),
+     ('prosa_soter', -20.45515, -54.5826),
 	 ('rq30',-20.4648,-54.59733),
 	 ('segredo',-20.4349,-54.62027),
 	 ('segredo2',-20.4588,-54.6219),
