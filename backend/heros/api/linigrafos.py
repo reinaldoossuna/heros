@@ -15,29 +15,13 @@ router = APIRouter(prefix="/linigrafos", tags=["linigrafos"])
 
 
 @router.get("/")
-def get_data(
-    start: datetime | None = None, end: datetime | None = None
-) -> List[LinigrafoData]:
+def get_data(start: datetime | None = None, end: datetime | None = None) -> List[LinigrafoData]:
     LOGGER.info("Requesting data from db")
     LOGGER.info(f"start: {start}")
     LOGGER.info(f"end: {end}")
 
     with pool.connection() as conn:
         data = lini.get_data(conn, start, end)
-        LOGGER.info("Sending data")
-        return data
-
-
-@router.get("/{local}")
-def get_local_data(
-    local: str, start: datetime | None = None, end: datetime | None = None
-) -> List[LinigrafoData]:
-    LOGGER.info(f"Requesting {local} data from db")
-    LOGGER.info(f"start: {start}")
-    LOGGER.info(f"end: {end}")
-
-    with pool.connection() as conn:
-        data = lini.get_local_data(conn, local, start, end)
         LOGGER.info("Sending data")
         return data
 
@@ -70,5 +54,19 @@ def sensors_lastupdate() -> List[LinigrafoLastUpdate]:
     LOGGER.info("Sensors lastupdate requested, getting data in db")
     with pool.connection() as conn:
         data = lini.get_sensors_lastupdate(conn)
+        LOGGER.info("Sending data")
+        return data
+
+
+@router.get("/{local}")
+def get_local_data(
+    local: str, start: datetime | None = None, end: datetime | None = None
+) -> List[LinigrafoData]:
+    LOGGER.info(f"Requesting {local} data from db")
+    LOGGER.info(f"start: {start}")
+    LOGGER.info(f"end: {end}")
+
+    with pool.connection() as conn:
+        data = lini.get_local_data(conn, local, start, end)
         LOGGER.info("Sending data")
         return data
