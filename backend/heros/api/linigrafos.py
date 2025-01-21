@@ -9,7 +9,7 @@ import heros.outbound_apis.engtec as engtec
 from heros.config import settings
 from heros.db_access import pool
 from heros.logging import LOGGER
-from heros.types.db.linigrafos import LinigrafoData, LinigrafoLastUpdate
+from heros.types.db.linigrafos import Interval, LinigrafoAvgData, LinigrafoData, LinigrafoLastUpdate
 
 router = APIRouter(prefix="/linigrafos", tags=["linigrafos"])
 
@@ -55,6 +55,12 @@ def sensors_lastupdate() -> List[LinigrafoLastUpdate]:
     with pool.connection() as conn:
         data = lini.get_sensors_lastupdate(conn)
         LOGGER.info("Sending data")
+        return data
+
+@router.get("/avg/{local}/{interval}")
+def get_local_avg_data(local: str, interval: Interval = Interval.hourly, daysago: int = 1) -> List[LinigrafoAvgData]:
+    with pool.connection() as conn:
+        data = lini.get_avg_local_data(conn, local, interval, daysago)
         return data
 
 

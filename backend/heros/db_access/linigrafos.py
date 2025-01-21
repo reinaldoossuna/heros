@@ -1,13 +1,10 @@
 from datetime import datetime
 from typing import Iterable, List, Optional
 
-from psycopg import Connection
+from psycopg import Connection, sql
 from psycopg.rows import class_row
 
-from heros.types.db.linigrafos import (
-    LinigrafoData,
-    LinigrafoLastUpdate,
-)
+from heros.types.db.linigrafos import LinigrafoData, LinigrafoLastUpdate, LinigrafoAvgData, Interval
 from heros.types.engtec import SensorData
 
 
@@ -60,6 +57,25 @@ def get_sensors_lastupdate(conn) -> List[LinigrafoLastUpdate]:
         FROM linigrafos
         GROUP BY mac;
         """)
+        return cur.fetchall()
+
+def get_avg_local_data(
+    conn: Connection, local: str, interval: Interval, daysago: int
+) -> List[LinigrafoAvgData]:
+
+    with conn.cursor(row_factory=class_row(LinigrafoAvgData)) as cur:
+        cur.execute(
+            sql.SQL("""
+        SELECT time_bucket(%s, l.data_leitura) AS date,
+        avg(l.valor_leitura) AS avg_height
+        FROM linigrafos as l
+        WHERE l.sub_id_disp = %s AND
+            l.data_leitura > now() - INTERVAL '{} days'
+        GROUP BY date
+        ORDER BY date ASC;
+                """).format(daysago),
+            (interval.get(), local),
+        )
         return cur.fetchall()
 
 
