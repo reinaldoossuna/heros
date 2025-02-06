@@ -27,7 +27,7 @@ const TemperatureChart = ({ data }: { data: Array<MetereologicoData> }) => {
                     tickFormatter={(value, _) => moment(value).format('HH:mm')}
                     scale="time" type="number" />
                 <YAxis />
-                <Tooltip labelFormatter={(value) => moment(value).format('DD/M/Y HH:mm')} formatter={formatter_tooltip} />
+                <Tooltip labelFormatter={(value) => moment(value).format('DD/MM/Y HH:mm')} formatter={formatter_tooltip} />
                 <CartesianGrid stroke="#ccc" />
                 <Line type="monotone" name='Temperatura do ar' dataKey="temperatura" stroke="#8884d8" dot={false} activeDot={{ r: 6 }} />
                 <Line type="monotone" name='Umidade relativa do ar' dataKey="umidade_ar" stroke="#51AFEF" activeDot={{ r: 6 }} />

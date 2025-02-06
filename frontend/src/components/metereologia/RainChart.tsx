@@ -26,8 +26,8 @@ const RainChart = ({ data }: { data: Array<MetereologicoData> }) => {
                     domain={[data[0].data.getTime(), data[data.length - 1].data.getTime()]}
                     tickFormatter={(value, _) => moment(value).format('HH:mm')}
                     scale="time" type="number" />
-                <YAxis />
-                <Tooltip labelFormatter={(value) => moment(value).format('d/M/Y HH:mm')} formatter={formatter_tooltip} />
+                <YAxis domain={[0, 10]} />
+                <Tooltip labelFormatter={(value) => moment(value).format('DD/MM/Y HH:mm')} formatter={formatter_tooltip} />
                 <Bar name="Precipitacao" dataKey="precipitacao" fill="#2257A0" activeBar={{ r: 8 }} />
             </BarChart>
         </ResponsiveContainer >
