@@ -21,7 +21,7 @@ function Dashboard() {
         ...getDataApiMetereologicoGetOptions({
             query: {
                 start: moment().utc().subtract(1, 'day').startOf('day').toDate(),
-                end: moment().subtract(1, 'day').endOf('day').toDate()
+                end: moment().utc().subtract(1, 'day').endOf('day').toDate()
             },
         }),
     })
