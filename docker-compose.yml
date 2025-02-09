@@ -8,7 +8,7 @@ services:
     build: backend
 
   db:
-    image: timescale/timescaledb-ha:pg17
+    image: docker.io/timescale/timescaledb-ha:pg17
     restart: always
     # set shared memory limit when using docker-compose
     shm_size: 128mb
@@ -19,7 +19,7 @@ services:
       - db-data:/home/postgres/pgdata/data
 
   pgadmin:
-    image: dpage/pgadmin4:8.14.0
+    image: docker.io/dpage/pgadmin4:8.14.0
     restart: always
     env_file: .env
     ports:
