@@ -1,13 +1,14 @@
 import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
 import { Link } from "@tanstack/react-router"
 import { TiBook, TiDownloadOutline, TiHome, TiWeatherShower } from "react-icons/ti"
-import { TbLineHeight } from "react-icons/tb"
+import { TbLineHeight, TbReportAnalytics } from "react-icons/tb"
 
 const items = [
     { icon: TiHome, title: "Home", path: "/" },
     { icon: TiWeatherShower, title: "Metereologia", path: "/metereologia" },
     { icon: TbLineHeight, title: "Sensores de nivel", path: "/linigrafos" },
     { icon: TiDownloadOutline, title: "Download", path: "/download" },
+    { icon: TbReportAnalytics, title: "Report", path: "/report" },
     { icon: TiBook, title: "About", path: "/about" }
 ]
 
