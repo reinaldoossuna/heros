@@ -4,24 +4,24 @@ services:
     restart: always
     ports:
       - 8000:8000
-    env_file: .env.prod
+    env_file: .env
     build: backend
 
   db:
-    image: docker://timescale/timescaledb-ha:pg17
+    image: timescale/timescaledb-ha:pg17
     restart: always
     # set shared memory limit when using docker-compose
     shm_size: 128mb
     ports:
       - 5432:5432
-    env_file: .env.prod
+    env_file: .env
     volumes:
       - db-data:/home/postgres/pgdata/data
 
   pgadmin:
-    image: docker://dpage/pgadmin4:8.14.0
+    image: dpage/pgadmin4:8.14.0
     restart: always
-    env_file: .env.prod
+    env_file: .env
     ports:
       - 8888:80
     volumes:
@@ -31,11 +31,11 @@ services:
     image: frontend
     restart: always
     ports:
-      - 4000:80
+      - 80:80
     build:
         context: frontend
         args:
-            - VITE_API_URL=server:8000
+            - VITE_API_URL=http://server:8000
             - NODE_ENV=production
 
 volumes:
