@@ -23,7 +23,9 @@ function ReportComponent() {
 			<Flex margin={20} >
 				<object type="application/pdf" data="http://localhost:4444" width="100%" height="500"></object>
 				<form >
-					<Textarea name="conclusion" onChange={setText(event?.target.value)} />
+					<Textarea name="conclusion" onChange={
+						e => setText(e.target.value)
+					} />
 					<Button onClick={handleSubmit}>
 					</Button>
 				</form>
