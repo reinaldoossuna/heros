@@ -51,7 +51,7 @@ const LevelChart = ({ location }: { location: string }) => {
                                 domain={[data[0].date.getTime(), data[data.length - 1].date.getTime()]}
                                 tickFormatter={(value, _) => moment(value).format('DD/M HH:mm')}
                                 scale="time" type="number" />
-                            <YAxis />
+                            <YAxis domain={[0, 2.0]} />
                             <Tooltip labelFormatter={(value) => moment(value).format('DD/M/Y HH:mm')} formatter={formatter_tooltip} />
                             {/* TODO: Clean data before ploting */}
                             <Area type="monotone" name="Altura" dataKey={d => d.avg_height} stroke="#2257A0" fill="#51AFEF" />
