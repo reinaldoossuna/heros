@@ -9,7 +9,7 @@ const formatter_tooltip = (value: number, name: string, _: any) => {
         case 'Precipitacao':
             return `${value} mm`
         default:
-            return value;
+            return value.toFixed(3);
 
     }
 }
