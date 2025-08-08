@@ -89,6 +89,32 @@ export const LinigrafoLastUpdateSchema = {
     description: 'Sensor in the db.'
 } as const;
 
+export const LocationSchema = {
+    properties: {
+        alias: {
+            type: 'string',
+            title: 'Alias'
+        },
+        sensor: {
+            '$ref': '#/components/schemas/SensorType'
+        },
+        status: {
+            '$ref': '#/components/schemas/SensorStatus'
+        },
+        latitude: {
+            type: 'number',
+            title: 'Latitude'
+        },
+        longitude: {
+            type: 'number',
+            title: 'Longitude'
+        }
+    },
+    type: 'object',
+    required: ['alias', 'sensor', 'status', 'latitude', 'longitude'],
+    title: 'Location'
+} as const;
+
 export const LocationDataSchema = {
     properties: {
         nome: {
@@ -197,6 +223,18 @@ export const MetereologicoDataSchema = {
     type: 'object',
     required: ['data', 'pressao_atmosferica', 'temperatura', 'umidade_ar', 'precipitacao', 'velocidade_vento', 'direcao_vento', 'bateria'],
     title: 'MetereologicoData'
+} as const;
+
+export const SensorStatusSchema = {
+    type: 'string',
+    enum: ['ok', 'missing', 'faulty', 'no_signal', 'maintenance', 'error', 'unknown'],
+    title: 'SensorStatus'
+} as const;
+
+export const SensorTypeSchema = {
+    type: 'string',
+    enum: ['linigrafo', 'weather', 'gauge'],
+    title: 'SensorType'
 } as const;
 
 export const ValidationErrorSchema = {

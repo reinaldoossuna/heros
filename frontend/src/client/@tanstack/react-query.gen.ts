@@ -3,7 +3,7 @@
 import type { OptionsLegacyParser } from '@hey-api/client-fetch';
 import { queryOptions, infiniteQueryOptions, type InfiniteData } from '@tanstack/react-query';
 import type { GetDataApiLinigrafosGetData, GetDataApiLinigrafosGetError, GetDataApiLinigrafosGetResponse, GetLocalAvgDataApiLinigrafosAvgLocalIntervalGetData, GetLocalDataApiLinigrafosLocalGetData, GetLocalDataApiLinigrafosLocalGetError, GetLocalDataApiLinigrafosLocalGetResponse, GetDataApiMetereologicoGetData, GetDataApiMetereologicoGetError, GetDataApiMetereologicoGetResponse } from '../types.gen';
-import { client, getDataApiLinigrafosGet, updateDataApiLinigrafosUpdateGet, lastUpdateApiLinigrafosUpdateLastGet, sensorsLastupdateApiLinigrafosLastupdateGet, getLocalAvgDataApiLinigrafosAvgLocalIntervalGet, getLocalDataApiLinigrafosLocalGet, getDataApiMetereologicoGet, updateDataApiMetereologicoUpdateGet, lastUpdateApiMetereologicoUpdateLastGet, canLoginApiMetereologicoCanLoginGet, getLocationsApiLocationGet, healtyApiHealtyGet } from '../sdk.gen';
+import { client, getDataApiLinigrafosGet, updateDataApiLinigrafosUpdateGet, lastUpdateApiLinigrafosUpdateLastGet, sensorsLastupdateApiLinigrafosLastupdateGet, getLocalAvgDataApiLinigrafosAvgLocalIntervalGet, getLocalDataApiLinigrafosLocalGet, getDataApiMetereologicoGet, updateDataApiMetereologicoUpdateGet, lastUpdateApiMetereologicoUpdateLastGet, canLoginApiMetereologicoCanLoginGet, getLocationsv2ApiLocationV2Get, getLocationsApiLocationGet, healtyApiHealtyGet } from '../sdk.gen';
 
 type QueryKey<TOptions extends OptionsLegacyParser> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -332,6 +332,25 @@ export const canLoginApiMetereologicoCanLoginGetOptions = (options?: OptionsLega
             return data;
         },
         queryKey: canLoginApiMetereologicoCanLoginGetQueryKey(options)
+    });
+};
+
+export const getLocationsv2ApiLocationV2GetQueryKey = (options?: OptionsLegacyParser) => [
+    createQueryKey('getLocationsv2ApiLocationV2Get', options)
+];
+
+export const getLocationsv2ApiLocationV2GetOptions = (options?: OptionsLegacyParser) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await getLocationsv2ApiLocationV2Get({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: getLocationsv2ApiLocationV2GetQueryKey(options)
     });
 };
 

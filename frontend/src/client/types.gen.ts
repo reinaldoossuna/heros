@@ -37,6 +37,14 @@ export type LinigrafoLastUpdate = {
     data: Date;
 };
 
+export type Location = {
+    alias: string;
+    sensor: SensorType;
+    status: SensorStatus;
+    latitude: number;
+    longitude: number;
+};
+
 export type LocationData = {
     nome: string;
     latitude: number;
@@ -53,6 +61,26 @@ export type MetereologicoData = {
     direcao_vento: (number | null);
     bateria: (number | null);
 };
+
+export type SensorStatus = 'ok' | 'missing' | 'faulty' | 'no_signal' | 'maintenance' | 'error' | 'unknown';
+
+export const SensorStatus = {
+    OK: 'ok',
+    MISSING: 'missing',
+    FAULTY: 'faulty',
+    NO_SIGNAL: 'no_signal',
+    MAINTENANCE: 'maintenance',
+    ERROR: 'error',
+    UNKNOWN: 'unknown'
+} as const;
+
+export type SensorType = 'linigrafo' | 'weather' | 'gauge';
+
+export const SensorType = {
+    LINIGRAFO: 'linigrafo',
+    WEATHER: 'weather',
+    GAUGE: 'gauge'
+} as const;
 
 export type ValidationError = {
     loc: Array<(string | number)>;
@@ -133,6 +161,10 @@ export type LastUpdateApiMetereologicoUpdateLastGetError = unknown;
 export type CanLoginApiMetereologicoCanLoginGetResponse = (boolean);
 
 export type CanLoginApiMetereologicoCanLoginGetError = unknown;
+
+export type GetLocationsv2ApiLocationV2GetResponse = (Array<Location>);
+
+export type GetLocationsv2ApiLocationV2GetError = unknown;
 
 export type GetLocationsApiLocationGetResponse = (Array<LocationData>);
 
