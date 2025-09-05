@@ -137,3 +137,13 @@ CREATE OR REPLACE TRIGGER wxt530_update_log
 AFTER INSERT ON wxt530
 FOR EACH STATEMENT
 EXECUTE PROCEDURE stamp_update_log();
+
+CREATE OR REPLACE VIEW met_daily AS
+    SELECT time_bucket('1 day', data) AS day,
+    	min(temperatura) as temp_min,
+		avg(temperatura) as temp_avg,
+    	max(temperatura) as temp_max,
+    	sum(precipitacao) as precip_total
+    FROM wxt530
+    GROUP BY day
+    ORDER BY day DESC;

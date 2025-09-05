@@ -1,3 +1,4 @@
+from heros.config import settings
 import logging
 import sys
 
@@ -16,7 +17,7 @@ def setup_logging():
 
     logging.basicConfig(
         handlers=[stdout_handler],
-        level=logging.INFO,
+        level=settings.log_level.to_logging(),
         format="%(asctime)s: %(message)s",
     )
 
