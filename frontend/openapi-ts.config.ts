@@ -2,7 +2,7 @@ import { defaultPlugins, defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
     client: '@hey-api/client-fetch',
-    input: 'http://localhost:8000/api/openapi.json',
+    input: 'http://localhost:8001/api/openapi.json',
     output: {
         format: 'biome',
         lint: 'eslint',
@@ -20,6 +20,6 @@ export default defineConfig({
             enums: 'javascript',
             name: '@hey-api/typescript',
         },
-        '@tanstack/react-query'
+        '@tanstack/react-query',
     ],
 })

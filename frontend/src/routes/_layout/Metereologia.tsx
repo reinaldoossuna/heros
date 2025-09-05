@@ -1,5 +1,5 @@
 import { Grid, GridItem } from "@chakra-ui/react"
-import { Box, Heading, useColorModeValue } from "@chakra-ui/react"
+import { Box, Heading} from "@chakra-ui/react"
 import { createFileRoute } from "@tanstack/react-router"
 import { getDataApiMetereologicoGetOptions } from '../../client/@tanstack/react-query.gen';
 
@@ -15,7 +15,6 @@ export const Route = createFileRoute("/_layout/Metereologia")({
 
 function Dashboard() {
 
-    const fgColor = useColorModeValue("ui.dark", "ui.light")
 
     const { data, status } = useQuery({
         ...getDataApiMetereologicoGetOptions({
@@ -35,7 +34,7 @@ function Dashboard() {
     return (
         <>
             <Box maxH={"100vh"} pt={12} m={4}>
-                <Heading size={"2xl"} color={fgColor}>
+                <Heading size={"2xl"}>
                     Metereologia
                 </Heading>
                 <Grid templateColumns="repeat(5, 1fr)" templateRows="10rem auto" gap={"2.4rem"} height={"auto"}>

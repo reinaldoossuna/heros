@@ -1,13 +1,20 @@
-import { Box, Heading, useColorModeValue } from "@chakra-ui/react"
+import { Box, Heading, } from "@chakra-ui/react"
+import {
+    useColorModeValue,
+} from "@/components/ui/color-mode"
 import { createFileRoute } from "@tanstack/react-router"
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
-import { LatLng } from "leaflet"
+import { MapContainer, Marker, Popup, TileLayer, Polyline, Tooltip } from 'react-leaflet'
+import { LatLng, PointExpression } from "leaflet"
 import { useQuery } from "@tanstack/react-query"
-import { getLocationsApiLocationGetOptions } from "../../client/@tanstack/react-query.gen.ts"
+import { getLocationsApiLocationGetOptions, getLocationsv2ApiLocationV2GetOptions } from "../../client/@tanstack/react-query.gen.ts"
 
 import L from 'leaflet';
 import rulerMarker from '../../assets/ruler.png'
 import radarMarker from '../../assets/temperature-sensor.png'
+import gaugeMarker from '../../assets/raingauge.png'
+import { SensorType } from "../../client/types.gen.ts"
+
+import { AnhanduiPolyLine, BalsamoPolyLine, BandeiraPolyLine, CoqueiroPolyLine, GameleiraPolyLine, GuarirobaPolyLine, ImbirussuPolyLine, LageadoPolyLine, LagoaPolyLine, ProsaPolyLine, RiberaobotasPolyLine, SegredoPolyLine } from "@/BaciasShapeFile.ts"
 
 const rulerIcon = L.icon({
     iconUrl: rulerMarker,
@@ -23,11 +30,44 @@ const radarIcon = L.icon({
     iconSize: [45, 45]
 })
 
+const gaugeIcon = L.icon({
+    iconUrl: gaugeMarker,
+    popupAnchor: [-0, -0],
+    iconSize: [45, 45]
+})
+
+function get_icon(sensor: SensorType) {
+    var url;
+    var archor: PointExpression = [-0, -0]
+    var size: PointExpression = [45, 45]
+    if (sensor == SensorType.GAUGE) {
+        url = gaugeMarker
+    } else if (sensor == SensorType.WEATHER) {
+        url = radarMarker
+    } else if (sensor == SensorType.LINIGRAFO) {
+        url = rulerMarker
+        size = [32, 45]
+    } else {
+        throw "Not Valid Sensor Type"
+    }
+    return L.icon({ iconUrl: url, iconRetinaUrl: url, popupAnchor: archor, iconSize: size })
+}
+
 
 export const Route = createFileRoute("/_layout/")({
     component: Dashboard,
 })
 
+
+const shedsToPlot = [
+    { positions: ImbirussuPolyLine, name: 'imbirussu', color: 'teal' },
+    { positions: CoqueiroPolyLine, name: 'coqueiro', color: 'yellow' },
+    { positions: AnhanduiPolyLine, name: 'anhandui', color: 'maroon' }, { positions: BandeiraPolyLine, name: 'bandeira', color: 'black' },
+    { positions: SegredoPolyLine, name: 'segredo', color: 'silver' }, { positions: BalsamoPolyLine, name: 'balsamo', color: 'purple' },
+    { positions: LageadoPolyLine, name: 'lageado', color: 'orange' }, { positions: LagoaPolyLine, name: 'lagoa', color: 'blue' },
+    { positions: GameleiraPolyLine, name: 'gameleira', color: 'green' }, { positions: RiberaobotasPolyLine, name: 'riberaobotas', color: 'red' },
+    { positions: ProsaPolyLine, name: 'prosa', color: 'navy' }, { positions: GuarirobaPolyLine, name: 'guariroba', color: 'pink' }
+]
 
 function Dashboard() {
 
@@ -36,47 +76,46 @@ function Dashboard() {
     const position = new LatLng(-20.4588, -54.6219)
     const wxt_loc = new LatLng(-20.45040, -54.56675)
 
-    const { data, status } = useQuery({
-        ...getLocationsApiLocationGetOptions(),
+    const { data: allLocations, status } = useQuery({
+        ...getLocationsv2ApiLocationV2GetOptions(),
         staleTime: Infinity
-    }
-
-    )
-
+    });
     if (status === 'pending') {
         return <span>Loading...</span>
     }
-    if (status === 'error' || typeof (data) === undefined) {
+    if (status === 'error' || typeof (allLocations) === undefined) {
         return <span>Error</span>
     }
 
     return (
         <>
             <Box maxH={"100vh"} pt={12} m={4}>
-                <Heading size={"2xl"} color={fgColor} p={5}>
+                <Heading size={"4xl"} p={5}>
                     Mapa
                 </Heading>
                 <MapContainer
                     style={{ height: "70vh", width: "auto" }}
-                    center={position} zoom={14} scrollWheelZoom={false}>
+                    center={position} zoom={11} scrollWheelZoom={true}>
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    {data.map(d => (
-                        <Marker position={[d.latitude, d.longitude]} icon={rulerIcon}>
+
+                    {allLocations?.map(d => (
+                        <Marker key={d.alias} position={[d.latitude, d.longitude]} icon={get_icon(d.sensor)}>
                             <Popup>
-                                {d.nome}
+                                Nome: {d.alias} <br />
+                                Status: {d.status} <br />
+                                Loc: {[d.latitude, d.longitude]} <br />
                             </Popup>
                         </Marker>)
                     )}
-
-                    <Marker position={wxt_loc} icon={radarIcon}>
-                        <Popup>
-                            Localizacao do sensor WXT53
-                        </Popup>
-                    </Marker>
-                </MapContainer>,
+                    {shedsToPlot.map(shed => <Polyline pathOptions={{ fill: true, fillOpacity: 0.1, color: shed.color }} positions={shed.positions} >
+                        <Tooltip sticky>
+                            {shed.name}
+                        </Tooltip>
+                    </Polyline>)}
+                </MapContainer>
             </Box>
         </>
     )

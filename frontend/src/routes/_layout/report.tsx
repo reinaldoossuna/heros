@@ -1,4 +1,4 @@
-import { Box, Heading, Flex, Button, useColorModeValue, Textarea } from "@chakra-ui/react"
+import { Box, Heading, Flex, Button, Textarea } from "@chakra-ui/react"
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
@@ -9,14 +9,13 @@ export const Route = createFileRoute("/_layout/report")({
 
 function ReportComponent() {
 	const [text, setText] = useState<string | null>(null)
-	const fgColor = useColorModeValue("ui.dark", "ui.light")
 	const handleSubmit = () => {
 		console.log(text)
 	}
 	return (
 
 		<Box maxH={"100vh"} pt={12} m={4}>
-			<Heading size={"2xl"} color={fgColor}>
+			<Heading size={"2xl"}>
 				Report
 			</Heading>
 

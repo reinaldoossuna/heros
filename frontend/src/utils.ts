@@ -20,14 +20,18 @@ const heat_index = (temperature: number, humidity: number) => {
     const RH = humidity;
 
     return -8.78469476 +                        // C1
-            1.61139411 * T +                    // C2
-            2.33854884 * RH +                   // C3
-           -0.14611605 * T * RH +               // C4
-           -0.01230809 * T * T +                // C5
-           -0.01642482 * RH * RH +              // C6
-            0.00221173 * T * T * RH +           // C7
-            0.00072546 * T * RH * RH +          // C8
-           -0.00000358 * T * T * RH * RH;       // C9
+        1.61139411 * T +                    // C2
+        2.33854884 * RH +                   // C3
+        -0.14611605 * T * RH +               // C4
+        -0.01230809 * T * T +                // C5
+        -0.01642482 * RH * RH +              // C6
+        0.00221173 * T * T * RH +           // C7
+        0.00072546 * T * RH * RH +          // C8
+        -0.00000358 * T * T * RH * RH;       // C9
 }
 
-export { heat_index , formatter_tooltip};
+
+const range = (length: number, startOf: number = 0) => [...Array(length).keys()].map(i => i + startOf)
+
+
+export { heat_index, formatter_tooltip, range };

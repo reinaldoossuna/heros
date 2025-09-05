@@ -13,14 +13,14 @@ const filter_data = (data: Array<MetereologicoData>, key: keyof MetereologicoDat
 
 const mean = (data: Array<MetereologicoData>, key: keyof MetereologicoData) => {
     const clean = filter_data(data, key)
-    const mean = clean.reduce((acc, v) => acc + v) / clean.length
+    const mean = clean.reduce((acc, v) => acc + v, 0) / clean.length
     return mean
 }
 
 const MetStats = ({ data }: { data: Array<MetereologicoData> }) => {
     const mean_temp = mean(data, 'temperatura')
     const mean_atm = mean(data, 'pressao_atmosferica')
-    const rain_acc = filter_data(data, 'precipitacao').reduce((acc, v) => acc + v)
+    const rain_acc = filter_data(data, 'precipitacao').reduce((acc, v) => acc + v, 0)
     const mean_rh = mean(data, 'umidade_ar')
 
     return (

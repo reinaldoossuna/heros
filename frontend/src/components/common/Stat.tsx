@@ -1,4 +1,4 @@
-import { Text, Icon, chakra, Heading, useColorModeValue } from "@chakra-ui/react"
+import { Text, Icon, chakra, Heading} from "@chakra-ui/react"
 import { IconType } from "react-icons"
 
 const Card = chakra('div', {
@@ -31,13 +31,12 @@ interface StatProps {
 
 export function Stat({ icon, color, title, children }: StatProps) {
 
-    const fgColor = useColorModeValue("ui.dark", "ui.light")
     return <Card>
-        <Icon as={icon} alignSelf={"center"} color={fgColor} bg={color} rounded={"50%"} width={"5.2rem"} height={"5.2rem"} padding={".5rem"} gridRow={"1/-1"} />
+        <Icon as={icon} alignSelf={"center"} bg={color} rounded={"50%"} width={"5.2rem"} height={"5.2rem"} padding={".5rem"} gridRow={"1/-1"} />
         <Heading size={"md"}>
             {title}
         </Heading>
-        <Text textStyle="7xl">
+        <Text textStyle="xl">
             {children}
         </Text>
     </Card>

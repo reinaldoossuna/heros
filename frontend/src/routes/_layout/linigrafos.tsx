@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react"
-import { Box, Heading, useColorModeValue } from "@chakra-ui/react"
+import { Box, Heading } from "@chakra-ui/react"
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from "@tanstack/react-router"
 
@@ -13,7 +13,6 @@ export const Route = createFileRoute("/_layout/linigrafos")({
 
 function Dashboard() {
 
-    const fgColor = useColorModeValue("ui.dark", "ui.light")
 
     const { data: locations, status } = useQuery({
         ...getLocationsApiLocationGetOptions({})
@@ -28,7 +27,7 @@ function Dashboard() {
     return (
         <>
             <Box maxH={"100vh"} pt={12} m={4}>
-                <Heading size={"2xl"} color={fgColor} margin={"2rem"}>
+                <Heading size={"2xl"} margin={"2rem"}>
                     Sensores de nivel - Últimos 5 dias
                 </Heading>
                 <Flex gap={"2.4rem"} height={"auto"} direction={"column"}>
