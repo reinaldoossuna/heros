@@ -13,7 +13,7 @@ const PeriodSelector = () => (
             ({ register }) =>
                 <>
                     <Separator label={"Periodo de dados"} />
-                    <HStack marginLeft={5}>
+                    <HStack marginLeft={2}>
                         <Field.Root>
                             <Field.Label>
                                 From: <Field.RequiredIndicator />
