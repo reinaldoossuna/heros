@@ -1,7 +1,7 @@
 import { Box, Heading, } from "@chakra-ui/react"
 import { createFileRoute } from "@tanstack/react-router"
 import { MapContainer, Marker, Popup, TileLayer, Polyline, Tooltip } from 'react-leaflet'
-import { LatLng, PointExpression } from "leaflet"
+import { LatLng, LatLngTuple, PointExpression } from "leaflet"
 import { useQuery } from "@tanstack/react-query"
 import { getLocationsv2ApiLocationV2GetOptions } from "../../client/@tanstack/react-query.gen.ts"
 
@@ -9,9 +9,10 @@ import L from 'leaflet';
 import rulerMarker from '../../assets/ruler.png'
 import radarMarker from '../../assets/temperature-sensor.png'
 import gaugeMarker from '../../assets/raingauge.png'
-import { SensorType } from "../../client/types.gen.ts"
+import { Location, SensorType } from "../../client/types.gen.ts"
 
 import { AnhanduiPolyLine, BalsamoPolyLine, BandeiraPolyLine, CoqueiroPolyLine, GameleiraPolyLine, GuarirobaPolyLine, ImbirussuPolyLine, LageadoPolyLine, LagoaPolyLine, ProsaPolyLine, RiberaobotasPolyLine, SegredoPolyLine } from "@/BaciasShapeFile.ts"
+import { Link } from "@tanstack/react-router"
 
 function get_icon(sensor: SensorType) {
     var url;
@@ -28,6 +29,14 @@ function get_icon(sensor: SensorType) {
         throw "Not Valid Sensor Type"
     }
     return L.icon({ iconUrl: url, iconRetinaUrl: url, popupAnchor: archor, iconSize: size })
+}
+
+function get_link(location: Location) {
+    if (location.sensor === SensorType.GAUGE) {
+        return <Link to={"/gauges"} search={{ stations: location.alias }
+        }> Veja os dados </Link>
+    }
+    return <></>
 }
 
 
@@ -54,6 +63,13 @@ function Dashboard() {
         ...getLocationsv2ApiLocationV2GetOptions(),
         staleTime: Infinity
     });
+
+    const sensors_in = (shed: string) => {
+        const shed_alias = shed.substring(0, 2);
+        return allLocations?.filter((l) => l.sensor === SensorType.GAUGE).map(l => l.alias).filter(l => l.toLowerCase().includes(shed_alias)).join(',');
+    }
+
+
     if (status === 'pending') {
         return <span>Loading...</span>
     }
@@ -83,13 +99,18 @@ function Dashboard() {
                                 Nome: {d.alias} <br />
                                 Status: {d.status} <br />
                                 Loc: {[d.latitude.toFixed(4), d.longitude.toFixed(4)]} <br />
+                                {get_link(d)}
                             </Popup>
                         </Marker>)
                     )}
-                    {shedsToPlot.map(shed => <Polyline pathOptions={{ fill: true, fillOpacity: 0.1, color: shed.color }} positions={shed.positions} >
+                    {shedsToPlot.map(shed => <Polyline pathOptions={{ fill: true, fillOpacity: 0.1, color: shed.color }} positions={shed.positions as LatLngTuple[]} >
                         <Tooltip sticky>
                             {shed.name}
                         </Tooltip>
+
+                        <Popup>
+                            <Link to={"/gauges"} search={{ stations: sensors_in(shed.name) }}>Veja os dados dos Pluviometros nesta bacia</Link>
+                        </Popup>
                     </Polyline>)}
                 </MapContainer>
             </Box>
