@@ -19,7 +19,7 @@ const useStations = (type: SensorType) => {
         .sort((a, b) => a.localeCompare(b)),
       status: status
     }
-    ), [allLocations, status]
+    ), [allLocations, status, type]
   )
 
   return stations;
