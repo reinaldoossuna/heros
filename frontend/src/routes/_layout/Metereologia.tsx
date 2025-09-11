@@ -44,6 +44,19 @@ function Dashboard() {
                     </GridItem>
                 </Grid>
             </Box>
+                {data.length !== 0 &&
+                    < Grid templateColumns="repeat(5, 1fr)" templateRows="10rem auto" gap={"2.4rem"} height={"auto"}>
+                        <MetStats data={data} />
+                        <GridItem gridRow={2} colSpan={4}>
+                            <Charts data={data} />
+                        </GridItem>
+                    </Grid>
+                }
+                {data.length === 0 &&
+                    <Text>
+                        No data for this day
+                    </Text>
+                }
         </>
     )
 }
