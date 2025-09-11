@@ -2,7 +2,7 @@ import { downloadDataApiDownloadPost } from "@/client";
 import LayoutBox from "@/components/common/LayoutBox";
 import PeriodSelector from "@/components/download/periodSelector";
 import StationSelector from "@/components/download/stationSelector";
-import TypeSelect from "@/components/download/type";
+import { TypeSelect } from '@/components/download/TypeSelect';
 import { Button } from "@/components/ui/button";
 import { VStack } from "@chakra-ui/react"
 
