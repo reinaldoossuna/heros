@@ -1,5 +1,5 @@
-import { Grid, GridItem } from "@chakra-ui/react"
-import { Box, Heading} from "@chakra-ui/react"
+import { Flex, Grid, GridItem, Input, Text } from "@chakra-ui/react"
+import { Box, Heading } from "@chakra-ui/react"
 import { createFileRoute } from "@tanstack/react-router"
 import { getDataApiMetereologicoGetOptions } from '../../client/@tanstack/react-query.gen';
 
@@ -7,6 +7,7 @@ import moment from 'moment';
 import { useQuery } from '@tanstack/react-query';
 import MetStats from "../../components/common/MetStats"
 import Charts from "../../components/metereologia/Charts"
+import { useState } from "react";
 
 
 export const Route = createFileRoute("/_layout/Metereologia")({
@@ -14,13 +15,14 @@ export const Route = createFileRoute("/_layout/Metereologia")({
 })
 
 function Dashboard() {
+    const [date, setDate] = useState(moment().utc().subtract(1, 'day'))
 
 
     const { data, status } = useQuery({
         ...getDataApiMetereologicoGetOptions({
             query: {
-                start: moment().utc().subtract(1, 'day').startOf('day').toDate(),
-                end: moment().utc().subtract(1, 'day').endOf('day').toDate()
+                start: date.startOf('day').toDate(),
+                end: date.endOf('day').toDate()
             },
         }),
     })
@@ -37,13 +39,14 @@ function Dashboard() {
                 <Heading size={"2xl"}>
                     Metereologia
                 </Heading>
-                <Grid templateColumns="repeat(5, 1fr)" templateRows="10rem auto" gap={"2.4rem"} height={"auto"}>
-                    <MetStats data={data} />
-                    <GridItem gridRow={2} colSpan={4}>
-                        <Charts data={data} />
-                    </GridItem>
-                </Grid>
-            </Box>
+
+                <Flex marginY={5} align={'end'} justifyContent={'flex-begin'}>
+                    <Input
+                        max={moment().format("YYYY-MM-DD")}
+                        type="date" width={"320px"} value={date.format("YYYY-MM-DD")} onChange={(e) => {
+                            setDate(moment(e.target.value))
+                        }} />
+                </Flex>
                 {data.length !== 0 &&
                     < Grid templateColumns="repeat(5, 1fr)" templateRows="10rem auto" gap={"2.4rem"} height={"auto"}>
                         <MetStats data={data} />
@@ -57,6 +60,7 @@ function Dashboard() {
                         No data for this day
                     </Text>
                 }
+            </Box >
         </>
     )
 }
