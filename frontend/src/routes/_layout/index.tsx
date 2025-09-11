@@ -1,12 +1,9 @@
 import { Box, Heading, } from "@chakra-ui/react"
-import {
-    useColorModeValue,
-} from "@/components/ui/color-mode"
 import { createFileRoute } from "@tanstack/react-router"
 import { MapContainer, Marker, Popup, TileLayer, Polyline, Tooltip } from 'react-leaflet'
 import { LatLng, PointExpression } from "leaflet"
 import { useQuery } from "@tanstack/react-query"
-import { getLocationsApiLocationGetOptions, getLocationsv2ApiLocationV2GetOptions } from "../../client/@tanstack/react-query.gen.ts"
+import { getLocationsv2ApiLocationV2GetOptions } from "../../client/@tanstack/react-query.gen.ts"
 
 import L from 'leaflet';
 import rulerMarker from '../../assets/ruler.png'
@@ -15,26 +12,6 @@ import gaugeMarker from '../../assets/raingauge.png'
 import { SensorType } from "../../client/types.gen.ts"
 
 import { AnhanduiPolyLine, BalsamoPolyLine, BandeiraPolyLine, CoqueiroPolyLine, GameleiraPolyLine, GuarirobaPolyLine, ImbirussuPolyLine, LageadoPolyLine, LagoaPolyLine, ProsaPolyLine, RiberaobotasPolyLine, SegredoPolyLine } from "@/BaciasShapeFile.ts"
-
-const rulerIcon = L.icon({
-    iconUrl: rulerMarker,
-    iconRetinaUrl: rulerMarker,
-    popupAnchor: [-0, -0],
-    iconSize: [32, 45]
-})
-
-const radarIcon = L.icon({
-    iconUrl: radarMarker,
-    iconRetinaUrl: radarMarker,
-    popupAnchor: [-0, -0],
-    iconSize: [45, 45]
-})
-
-const gaugeIcon = L.icon({
-    iconUrl: gaugeMarker,
-    popupAnchor: [-0, -0],
-    iconSize: [45, 45]
-})
 
 function get_icon(sensor: SensorType) {
     var url;
@@ -71,10 +48,7 @@ const shedsToPlot = [
 
 function Dashboard() {
 
-    const fgColor = useColorModeValue("ui.dark", "ui.light")
-
     const position = new LatLng(-20.4588, -54.6219)
-    const wxt_loc = new LatLng(-20.45040, -54.56675)
 
     const { data: allLocations, status } = useQuery({
         ...getLocationsv2ApiLocationV2GetOptions(),
