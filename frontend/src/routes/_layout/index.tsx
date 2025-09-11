@@ -95,8 +95,10 @@ function Dashboard() {
                 </Heading>
                 <MapContainer
                     style={{ height: "70vh", width: "auto" }}
-                    center={position} zoom={11} scrollWheelZoom={true}>
+                    center={position} zoom={10} scrollWheelZoom={true}>
                     <TileLayer
+                        maxZoom={13}
+                        minZoom={11}
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
