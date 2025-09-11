@@ -48,5 +48,4 @@ select {
 a {
   color: var(--fg);
   text-decoration: none;
-  border-bottom: 1px solid var(--fg);
 }
