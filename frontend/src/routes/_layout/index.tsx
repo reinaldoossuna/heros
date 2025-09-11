@@ -106,7 +106,7 @@ function Dashboard() {
                             <Popup>
                                 Nome: {d.alias} <br />
                                 Status: {d.status} <br />
-                                Loc: {[d.latitude, d.longitude]} <br />
+                                Loc: {[d.latitude.toFixed(4), d.longitude.toFixed(4)]} <br />
                             </Popup>
                         </Marker>)
                     )}
