@@ -19,6 +19,7 @@ export default function Sidebar() {
                 justify={"space-between"}
                 p={4}
                 borderRadius={12}
+            background={"var(--main)"}
             >
                 <Box>
                     <Image src={HerosLogo} alt="Logo" w="180px" maxW="2xs" p={6} />
