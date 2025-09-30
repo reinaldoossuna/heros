@@ -12,12 +12,13 @@ import {
 } from "@chakra-ui/react"
 import { useMemo, useState } from "react"
 
+export const allnone = "Todos/Nenhum";
 
 const StationSelect = ({ selected, onChange }) => {
     const { stations } = useStations(SensorType.GAUGE);
     const [searchValue, setSearchValue] = useState("")
     const filteredItems = useMemo(
-        () => ['none'].concat(stations)
+        () => [allnone].concat(stations)
             .filter((item) =>
                 item.toLowerCase().includes(searchValue.toLowerCase()),
             ),

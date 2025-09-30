@@ -38,14 +38,20 @@ function Dashboard() {
     }, [stations])
 
     const handleStationsChange = (details: Combobox.ValueChangeDetails) => {
-        if (details.value.find((v) => v === 'none')) {
-            setSelectedStations([])
 
-            navigate({ search: prev => ({ year: prev.year }) })
-            return;
+        // Check if the user selected the toggle option
+        if (details.value.find((v) => v === allnone)) {
+            // If there's stations selected, clean the selection
+            // otherwise select all stations
+            if (selectedStations.length === 0) {
+                setSelectedStations(stations)
+            } else {
+                setSelectedStations([])
+            }
+        } else {
+            setSelectedStations(details.value)
         }
-        setSelectedStations(details.value)
-        navigate({ search: prev => ({ ...prev, stations: details.value.join(','), }) })
+        navigate({ search: (prev: any) => ({ ...prev, stations: selectedStations.join(','), }) })
     }
 
     const handleYearChange = (details: Select.ValueChangeDetails) => {
