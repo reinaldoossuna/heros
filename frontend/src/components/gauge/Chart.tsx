@@ -2,7 +2,7 @@ import { getDailyStationDataApiGaugesDailyStationGetOptions } from '@/client/@ta
 import { Flex, Heading, Spinner } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
-import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, CartesianGrid, ComposedChart, Line, Tooltip, XAxis, YAxis } from 'recharts';
 
 interface chartPropTypes {
     location: String,
@@ -49,7 +49,6 @@ const Chart = ({ station, year }: chartPropTypes) => {
 
         </Heading>
         {status === 'success' && data.length > 0 &&
-            <ResponsiveContainer width={1200} height={250}>
                 <ComposedChart
                     data={data.map(cumulativeSum)}
                     margin={{
@@ -73,12 +72,13 @@ const Chart = ({ station, year }: chartPropTypes) => {
                     <YAxis yAxisId="accumulated" orientation="right" domain={[0, 200]} />
 
                     <Tooltip labelFormatter={(value) => moment(`01/01/${year}`).dayOfYear(value).format("DD/MM/YYYY")
+                width={1000}
+                height={250}
                     } />
                     <Bar yAxisId={"discrete"} dataKey="data" fill="#82ca9d" />
                     <Line yAxisId={"accumulated"} type="monotone" dataKey={"acc"} stroke="#ff7300" />
 
                 </ComposedChart>
-            </ResponsiveContainer>
         }
     </Flex>
 
