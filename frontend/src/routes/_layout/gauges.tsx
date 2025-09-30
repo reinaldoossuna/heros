@@ -10,7 +10,7 @@ import { SensorType } from "@/client";
 import { useStations } from "@/hooks/useStation";
 
 type GaugeSearch = {
-    year: Number
+    year: number
     stations: string[]
 }
 
