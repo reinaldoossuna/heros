@@ -23,46 +23,86 @@ def table_exists(conn: Connection, station: str):
         return cur.fetchone()
 
 
+query_station_data = sql.SQL(
+    """
+WITH shifted_table AS (
+    SELECT
+        "time",
+        {station} as raw,
+        LAG({station}, 1, 0) OVER (ORDER BY "time") AS shifted
+    FROM {table}
+    WHERE
+    time >= COALESCE({start}, to_timestamp(0)::date) AND
+    time < COALESCE({end}, CURRENT_TIMESTAMP)
+)
+SELECT
+    "time",
+    CASE WHEN raw >= shifted THEN raw - shifted ELSE raw END AS data
+FROM shifted_table
+ORDER BY "time";
+                """
+)
+
+
 def get_station_data(
     conn: Connection, station: str, start: Optional[datetime] = None, end: Optional[datetime] = None
 ):
     with conn.cursor(row_factory=class_row(GaugeData)) as cur:
         cur.execute(
-            sql.SQL(
-                """
-SELECT time, {column} as data
-FROM gauges g
-WHERE time BETWEEN
-    COALESCE({start}, to_timestamp(0)::date)
-    AND COALESCE({end}, CURRENT_TIMESTAMP)
-    AND {column} IS NOT NULL;
-        """
-            ).format(column=sql.Identifier(station), start=start, end=end),
+            query_station_data.format(
+                table=sql.Identifier("pluviometros_processados"),
+                station=sql.Identifier(station),
+                start=start,
+                end=end,
+            ),
         )
         return cur.fetchall()
 
 
 def get_acc_station_data(
-        conn: Connection, station: str, interval: Interval, start: Optional[datetime] = None, end: Optional[datetime] = None
+    conn: Connection,
+    station: str,
+    interval: Interval,
+    start: Optional[datetime] = None,
+    end: Optional[datetime] = None,
 ):
     with conn.cursor(row_factory=class_row(GaugeData)) as cur:
         cur.execute(
             sql.SQL(
                 """
-WITH temp as (
+WITH shifted_table AS (
+    SELECT
+        "time",
+        {station} as raw,
+        LAG({station}, 1, 0) OVER (ORDER BY "time") AS shifted
+    FROM {table}
+    WHERE
+    time >= COALESCE({start}, to_timestamp(0)::date) AND
+    time < COALESCE({end}, CURRENT_TIMESTAMP)
+),
+                discrete_table AS (
+SELECT
+    "time",
+    CASE WHEN raw >= shifted THEN raw - shifted ELSE raw END AS discrete
+FROM shifted_table
+ORDER BY "time"
+),
+                temp as (
     SELECT time_bucket({interval}, time) AS bucket,
-                    sum({station}) AS data
-    FROM gauges g
-    WHERE time BETWEEN
-        COALESCE({start}, to_timestamp(0)::date)
-        AND COALESCE({end}, CURRENT_TIMESTAMP)
-        AND {station} IS NOT NULL
+                    sum(discrete) AS data
+    FROM discrete_table
     GROUP BY bucket
     ORDER BY bucket ASC)
 
 SELECT bucket as time, data
 FROM temp;
         """
-            ).format(station=sql.Identifier(station),interval=interval.get(), start=start, end=end),
+            ).format(
+                table=sql.Identifier("pluviometros_processados"),
+                station=sql.Identifier(station),
+                interval=interval.get(),
+                start=start,
+                end=end,
+            ),
         )
         return cur.fetchall()

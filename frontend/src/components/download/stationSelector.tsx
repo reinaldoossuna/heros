@@ -20,7 +20,6 @@ const StationSelector = () => {
                     name: "stations",
                     defaultValue: [],
                 });
-                console.log(stationsOptions)
 
                 const invalid = !!errors.stations;
                 return (

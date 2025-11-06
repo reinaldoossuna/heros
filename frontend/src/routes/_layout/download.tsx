@@ -43,7 +43,6 @@ function DownloadComponent() {
                 stations: v.stations
             }
         })
-        console.log(response)
         sendBlob2User(response.data, "data.zip")
     }
 

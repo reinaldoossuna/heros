@@ -22,6 +22,9 @@ const tooltipFormatter = (value: number, name: string, _props: any) => {
 };
 
 const Chart = ({ station, year }: chartPropTypes) => {
+    if (station === '') {
+        return <></>
+    }
     const { data, error, status } = useQuery({
         ...getDailyStationDataApiGaugesDailyStationGetOptions({
             // @ts-ignore

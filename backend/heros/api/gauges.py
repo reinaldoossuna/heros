@@ -21,9 +21,7 @@ def get_station_data(
     LOGGER.info(f"end: {end}")
 
     with pool.connection() as conn:
-        if not gauges.table_exists(conn, station):
-            raise HTTPException(status_code=404, detail=f"table for {station} does not exists.")
-        data = gauges.get_station_data(conn, station, start, end)
+        data = gauges.get_station_data(conn, station.lower(), start, end)
         LOGGER.info("Sending data")
         return data
 
@@ -37,8 +35,6 @@ def get_daily_station_data(
     LOGGER.info(f"end: {end}")
 
     with pool.connection() as conn:
-        if not gauges.table_exists(conn, station):
-            raise HTTPException(status_code=404, detail=f"table for {station} does not exists.")
-        data = gauges.get_acc_station_data(conn, station, Interval.daily, start, end)
+        data = gauges.get_acc_station_data(conn, station.lower(), Interval.daily, start, end)
         LOGGER.info("Sending data")
         return data
