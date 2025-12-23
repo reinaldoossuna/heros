@@ -2,8 +2,17 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { MetereologicoData } from '../../client';
 import moment from 'moment';
 import { formatter_tooltip, heat_index } from '../../utils'
+import { Box, Text } from '@chakra-ui/react';
 
 const TemperatureChart = ({ data }: { data: Array<MetereologicoData> }) => {
+    if (!data || data.length === 0) {
+        return (
+            <Box p={4} textAlign="center">
+                <Text>No temperature data available for this date</Text>
+            </Box>
+        );
+    }
+
     return (
         <ResponsiveContainer width="100%" height={300}>
             <LineChart
