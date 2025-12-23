@@ -32,7 +32,7 @@ class Level(StrEnum):
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_nested_delimiter="__", env_file=".env", extra="ignore", cli_parse_args=True
+        env_nested_delimiter="__", env_file=".env", extra="ignore"
     )
 
     port: int

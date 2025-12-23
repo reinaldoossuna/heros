@@ -8,6 +8,7 @@ import heros.db_access.meterologico as met
 import heros.outbound_apis.noaa as noaa
 from heros.config import settings
 from heros.db_access import pool, date_lastupdate
+from heros.db_access.credentials import get_credential
 from heros.logging import LOGGER
 from heros.types.db.metereologico import MetereologicoData
 
@@ -30,7 +31,9 @@ def get_data(
 
 @router.get("/update")
 def update_data():
-    config = settings.noaa
+    # Try to get credentials from database first, fallback to config
+    db_config = get_credential("noaa")
+    config = db_config if db_config is not None else settings.noaa
 
     with pool.connection() as conn:
         last_day = met.last_timestamp(conn)
@@ -57,7 +60,10 @@ def last_update() -> Optional[datetime]:
 
 @router.get("/can_login")
 def can_login() -> bool:
-    config = settings.noaa
+    # Try to get credentials from database first, fallback to config
+    db_config = get_credential("noaa")
+    config = db_config if db_config is not None else settings.noaa
+    
     s = noaa.login(config.user, config.password)
     result = s is not None
     s.close() if result else None
