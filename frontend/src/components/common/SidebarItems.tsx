@@ -1,7 +1,7 @@
 import { Box, Flex, Icon, Text } from "@chakra-ui/react"
 import { Link } from "@tanstack/react-router"
 import { TiBook, TiDownloadOutline, TiHome, TiWeatherShower } from "react-icons/ti"
-import { TbLineHeight, TbReportAnalytics, TbCloudRain } from "react-icons/tb"
+import { TbLineHeight, TbCloudRain, TbLock } from "react-icons/tb"
 
 
 const items = [
@@ -10,7 +10,7 @@ const items = [
     { icon: TbLineHeight, title: "Sensores de nivel", path: "/linigrafos" },
     { icon: TbCloudRain, title: "Pluviometros", path: "/gauges" },
     { icon: TiDownloadOutline, title: "Download", path: "/download" },
-    { icon: TbReportAnalytics, title: "Report", path: "/report" },
+    { icon: TbLock, title: "Credentials", path: "/credentials" },
     { icon: TiBook, title: "About", path: "/about" }
 ]
 

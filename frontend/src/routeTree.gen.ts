@@ -17,6 +17,7 @@ import { Route as LayoutReportImport } from './routes/_layout/report'
 import { Route as LayoutLinigrafosImport } from './routes/_layout/linigrafos'
 import { Route as LayoutGaugesImport } from './routes/_layout/gauges'
 import { Route as LayoutDownloadImport } from './routes/_layout/download'
+import { Route as LayoutCredentialsImport } from './routes/_layout/credentials'
 import { Route as LayoutAboutImport } from './routes/_layout/about'
 import { Route as LayoutMetereologiaImport } from './routes/_layout/Metereologia'
 
@@ -52,6 +53,11 @@ const LayoutDownloadRoute = LayoutDownloadImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
+const LayoutCredentialsRoute = LayoutCredentialsImport.update({
+  path: '/credentials',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
 const LayoutAboutRoute = LayoutAboutImport.update({
   path: '/about',
   getParentRoute: () => LayoutRoute,
@@ -76,6 +82,10 @@ declare module '@tanstack/react-router' {
     }
     '/_layout/about': {
       preLoaderRoute: typeof LayoutAboutImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/credentials': {
+      preLoaderRoute: typeof LayoutCredentialsImport
       parentRoute: typeof LayoutImport
     }
     '/_layout/download': {
@@ -107,6 +117,7 @@ export const routeTree = rootRoute.addChildren([
   LayoutRoute.addChildren([
     LayoutMetereologiaRoute,
     LayoutAboutRoute,
+    LayoutCredentialsRoute,
     LayoutDownloadRoute,
     LayoutGaugesRoute,
     LayoutLinigrafosRoute,
