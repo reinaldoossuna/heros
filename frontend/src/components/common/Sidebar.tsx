@@ -29,7 +29,7 @@ export default function Sidebar() {
                     p={2}
                     maxW="180px"
                 >
-                    Lorem
+                    Sistema de Monitoramento Hidrológico e Meteorológico
                 </Text>
             </Flex>
         </Box>

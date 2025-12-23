@@ -6,9 +6,9 @@ import { TbLineHeight, TbCloudRain, TbLock } from "react-icons/tb"
 
 const items = [
     { icon: TiHome, title: "Home", path: "/" },
-    { icon: TiWeatherShower, title: "Metereologia", path: "/metereologia" },
-    { icon: TbLineHeight, title: "Sensores de nivel", path: "/linigrafos" },
-    { icon: TbCloudRain, title: "Pluviometros", path: "/gauges" },
+    { icon: TiWeatherShower, title: "Meteorologia", path: "/metereologia" },
+    { icon: TbLineHeight, title: "Sensores de nível", path: "/linigrafos" },
+    { icon: TbCloudRain, title: "Pluviômetros", path: "/gauges" },
     { icon: TiDownloadOutline, title: "Download", path: "/download" },
     { icon: TbLock, title: "Credentials", path: "/credentials" },
     { icon: TiBook, title: "About", path: "/about" }

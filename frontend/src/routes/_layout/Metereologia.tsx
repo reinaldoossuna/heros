@@ -37,7 +37,7 @@ function Dashboard() {
         <>
             <Box maxH={"100vh"} pt={12} m={4}>
                 <Heading size={"2xl"}>
-                    Metereologia
+                    Meteorologia
                 </Heading>
 
                 <Flex marginY={5} align={'end'} justifyContent={'flex-begin'}>

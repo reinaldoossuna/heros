@@ -109,7 +109,7 @@ function Dashboard() {
                         </Tooltip>
 
                         <Popup>
-                            <Link to={"/gauges"} search={{ stations: sensors_in(shed.name) }}>Veja os dados dos Pluviometros nesta bacia</Link>
+                            <Link to={"/gauges"} search={{ stations: sensors_in(shed.name) }}>Veja os dados dos Pluviômetros nesta bacia</Link>
                         </Popup>
                     </Polyline>)}
                 </MapContainer>

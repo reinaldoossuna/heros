@@ -61,7 +61,7 @@ function Dashboard() {
         <>
             <Box maxH={"100vh"} pt={12} m={4}>
                 <Heading size={"2xl"} margin={"2rem"}>
-                    Pluviometros
+                    Pluviômetros
                 </Heading>
                 <Flex gap={"2.4rem"} height={"auto"} direction={"column"} alignContent={'center'}>
                     <Flex justifyContent={'flex-end'} align={'end'} gap={5}>

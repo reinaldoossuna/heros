@@ -28,7 +28,7 @@ function Dashboard() {
         <>
             <Box maxH={"100vh"} pt={12} m={4}>
                 <Heading size={"2xl"} margin={"2rem"}>
-                    Sensores de nivel - Últimos 5 dias
+                    Sensores de nível - Últimos 5 dias
                 </Heading>
                 <Flex gap={"2.4rem"} height={"auto"} direction={"column"}>
                     {locations.map(location => <LevelChart location={location.nome} />)}
