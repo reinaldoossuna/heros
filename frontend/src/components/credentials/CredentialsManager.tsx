@@ -119,7 +119,7 @@ export default function CredentialsManager() {
           {services.length === 0 ? (
             <Text color="gray.500">No services configured</Text>
           ) : (
-            <VStack align="stretch" spacing={2}>
+           <VStack align="stretch" gap={2}>
               {services.map((service) => (
                 <Box
                   key={service.service_name}
@@ -182,7 +182,7 @@ export default function CredentialsManager() {
               .map((service) => (
                 <VStack
                   align="start"
-                  spacing={3}
+                  gap={3}
                   key={service.service_name}
                 >
                   <Box>
@@ -223,7 +223,7 @@ export default function CredentialsManager() {
           </Heading>
 
           <form onSubmit={handleSubmit}>
-            <VStack spacing={4}>
+            <VStack gap={4}>
               {error && (
                 <Box
                   bg="red.50"
@@ -306,7 +306,7 @@ export default function CredentialsManager() {
                 />
               </Box>
 
-              <HStack spacing={4} w="100%">
+              <HStack gap={4} w="100%">
                 <Button
                   type="submit"
                   colorScheme="blue"
