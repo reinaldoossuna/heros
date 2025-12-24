@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from itertools import chain
 from typing import List, Optional
 
@@ -69,3 +69,13 @@ def can_login() -> bool:
     s.close() if result else None
 
     return result
+
+
+@router.get("/days")
+def get_data_days() -> List[date]:
+    LOGGER.info("Requesting days with metereologico data")
+    with pool.connection() as conn:
+        days = met.get_data_days(conn)
+        LOGGER.debug(f"Days: {days}")
+        LOGGER.info("Sending days")
+        return days

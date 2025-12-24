@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import Iterable, List, Optional
 
 from psycopg import Connection
@@ -60,3 +60,13 @@ ON CONFLICT ("data")
             map(lambda d: d.model_dump(), datas),
         )
         conn.commit()
+
+
+def get_data_days(conn: Connection) -> List[date]:
+    with conn.cursor(row_factory=scalar_row) as cur:
+        cur.execute("""
+        SELECT DISTINCT DATE(ds.data)
+        FROM wxt530 ds
+        ORDER BY DATE(ds.data) ASC;
+        """)
+        return cur.fetchall()
