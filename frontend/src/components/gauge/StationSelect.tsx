@@ -14,7 +14,7 @@ import { useMemo, useState } from "react"
 
 export const allnone = "Todos/Nenhum";
 
-const StationSelect = ({ selected, onChange }) => {
+const StationSelect = ({ selected, onChange }: { selected: string[]; onChange: (details: any) => void }) => {
     const { stations } = useStations(SensorType.GAUGE);
     const [searchValue, setSearchValue] = useState("")
     const filteredItems = useMemo(

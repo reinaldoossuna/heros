@@ -2,7 +2,7 @@ import { Text, Icon, chakra, Heading} from "@chakra-ui/react"
 import { IconType } from "react-icons"
 
 const Card = chakra('div', {
-    baseStyle: {
+    base: {
         display: "grid",
         gridTemplateColumns: "6.4rem 1fr",
         gridTemplateRows: "auto auto",
@@ -10,9 +10,8 @@ const Card = chakra('div', {
         rounded: 'sm',
         shadow: 'lg',
         bg: "inherit"
-    },
-}
-)
+    }
+})
 
 export enum Status {
     Good = "green.100",

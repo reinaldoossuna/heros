@@ -10,7 +10,7 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
   function Radio(props, ref) {
     const { children, inputProps, rootRef, ...rest } = props
     return (
-      <ChakraRadioGroup.Item ref={rootRef} {...rest}>
+      <ChakraRadioGroup.Item ref={rootRef as any} {...rest}>
         <ChakraRadioGroup.ItemHiddenInput ref={ref} {...inputProps} />
         <ChakraRadioGroup.ItemIndicator />
         {children && (

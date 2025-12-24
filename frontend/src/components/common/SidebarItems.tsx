@@ -19,14 +19,15 @@ export default function SidebarItems() {
     const listItems = items.map(({ icon, title, path }) => (
 
         <Flex
-            as={Link}
-            to={path}
+            asChild
             w="100%"
             p={2}
             key={title}
         >
+            <Link to={path}>
             <Icon as={icon} alignSelf="center" />
             <Text ml={2}> {title}</Text>
+        </Link>
         </Flex>
     ))
 

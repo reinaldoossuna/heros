@@ -8,7 +8,7 @@ const years = createListCollection({
     items: range(maxYear - minYear + 1, minYear).map(y => y.toString())
 })
 
-const YearSelect = ({year, onChange }) => {
+const YearSelect = ({ year, onChange }: { year: string; onChange: (details: any) => void }) => {
 
 
     return (

@@ -10,7 +10,7 @@ export class Period {
 const PeriodSelector = () => (
     <ConnectForm>
         {
-            ({ register }) =>
+            ({ register }: any) =>
                 <>
                     <Separator label={"Periodo de dados"} />
                     <HStack marginLeft={2}>

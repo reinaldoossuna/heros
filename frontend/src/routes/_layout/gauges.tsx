@@ -65,7 +65,7 @@ function Dashboard() {
                 </Heading>
                 <Flex gap={"2.4rem"} height={"auto"} direction={"column"} alignContent={'center'}>
                     <Flex justifyContent={'flex-end'} align={'end'} gap={5}>
-                        <YearSelect year={year} onChange={handleYearChange} /> <StationSelect selected={selectedStations} onChange={handleStationsChange} />
+                    <YearSelect year={year.toString()} onChange={handleYearChange} /> <StationSelect selected={selectedStations} onChange={handleStationsChange} />
                     </Flex>
 
                     {selectedStations.map(station =>

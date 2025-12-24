@@ -29,7 +29,7 @@ interface UpdateResponse {
   success: boolean;
   message: string;
   service_name: string;
-  updated_at: string;
+  updated_at: Date;
   updated_by: string;
 }
 
@@ -47,7 +47,7 @@ export default function CredentialsManager() {
     listServicesApiCredentialsServicesGetOptions()
   );
 
-  const services: Service[] = servicesData?.services ?? [];
+  const services: Service[] = (servicesData?.services as Service[]) ?? [];
 
   // Set first service as selected when services load
   if (services.length > 0 && !selectedService) {
@@ -56,7 +56,7 @@ export default function CredentialsManager() {
 
   // Mutation for updating credentials
   const updateMutation = useMutation({
-    ...updateCredentialApiCredentialsUpdatePostMutation(),
+    mutationFn: updateCredentialApiCredentialsUpdatePostMutation().mutationFn,
     onSuccess: (result: UpdateResponse) => {
       setSuccess(
         `✓ Credentials updated successfully at ${new Date(result.updated_at).toLocaleString()}`
@@ -310,7 +310,7 @@ export default function CredentialsManager() {
                 <Button
                   type="submit"
                   colorScheme="blue"
-                  isLoading={updateMutation.isPending}
+                  loading={updateMutation.isPending}
                   disabled={updateMutation.isPending}
                   flex={1}
                 >
