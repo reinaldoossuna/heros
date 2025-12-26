@@ -107,7 +107,7 @@ function Dashboard() {
   if (status === 'pending') {
     return <span>Loading...</span>
   }
-  if (status === 'error' || typeof allLocations === undefined) {
+  if (status === 'error' || !Array.isArray(allLocations)) {
     return <span>Error</span>
   }
 

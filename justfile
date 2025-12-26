@@ -11,3 +11,8 @@ openapi:
 [working-directory: 'backend']
 back:
     uv run heros-server --port 8001 --log_level debug
+
+
+[working-directory: 'frontend']
+build:
+    npm run build
