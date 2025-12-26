@@ -55,9 +55,9 @@ function Dashboard() {
     if (status === 'pending') {
         return <span>Loading...</span>
     }
+    if (status === 'error' || typeof (data) === undefined) {
         return <span>Error</span>
     }
-  if (status === 'error' || !Array.isArray(data)) {
 
     return (
         <>

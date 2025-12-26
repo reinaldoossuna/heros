@@ -13,7 +13,7 @@ const useStations = (type: SensorType) => {
 
   const stations = useMemo(
     () => ({
-      stations: (allLocations ?? [])
+      stations: allLocations!
         .filter((station) => station.sensor === type)
         .map(station => station.alias)
         .sort((a, b) => a.localeCompare(b)),
