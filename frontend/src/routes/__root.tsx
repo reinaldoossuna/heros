@@ -1,12 +1,12 @@
-import { Outlet, createRootRoute } from "@tanstack/react-router";
-import React from "react";
+import { Outlet, createRootRoute } from '@tanstack/react-router'
+import React from 'react'
 
 export const Route = createRootRoute({
-    component: RootComponent,
-});
+  component: RootComponent,
+})
 
 const TanStackRouterDevtools =
-    process.env.NODE_ENV === 'production'
+  process.env.NODE_ENV === 'production'
     ? () => null // Render nothing in production
     : React.lazy(() =>
         // Lazy load in development
@@ -14,14 +14,14 @@ const TanStackRouterDevtools =
           default: res.TanStackRouterDevtools,
           // For Embedded Mode
           // default: res.TanStackRouterDevtoolsPanel
-        })),
+        }))
       )
 
 function RootComponent() {
-    return (
-        <>
-            <Outlet />
-            <TanStackRouterDevtools position="bottom-right" />
-        </>
-    );
+  return (
+    <>
+      <Outlet />
+      <TanStackRouterDevtools position="bottom-right" />
+    </>
+  )
 }

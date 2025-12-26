@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Box,
   Button,
@@ -11,47 +11,47 @@ import {
   Grid,
   GridItem,
   Flex,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react'
 import {
   listServicesApiCredentialsServicesGetOptions,
   updateCredentialApiCredentialsUpdatePostMutation,
-} from "../../client/@tanstack/react-query.gen";
+} from '../../client/@tanstack/react-query.gen'
 
 interface Service {
-  service_name: string;
-  username: string;
-  is_active: boolean;
-  last_updated: string;
-  updated_by?: string;
+  service_name: string
+  username: string
+  is_active: boolean
+  last_updated: string
+  updated_by?: string
 }
 
 interface UpdateResponse {
-  success: boolean;
-  message: string;
-  service_name: string;
-  updated_at: Date;
-  updated_by: string;
+  success: boolean
+  message: string
+  service_name: string
+  updated_at: Date
+  updated_by: string
 }
 
 export default function CredentialsManager() {
-  const queryClient = useQueryClient();
-  const [selectedService, setSelectedService] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
+  const queryClient = useQueryClient()
+  const [selectedService, setSelectedService] = useState<string>('')
+  const [username, setUsername] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [error, setError] = useState<string>('')
+  const [success, setSuccess] = useState<string>('')
 
   // Fetch services using OpenAPI generated hook
   const { data: servicesData, isLoading: servicesLoading } = useQuery(
     listServicesApiCredentialsServicesGetOptions()
-  );
+  )
 
-  const services: Service[] = (servicesData?.services as Service[]) ?? [];
+  const services: Service[] = (servicesData?.services as Service[]) ?? []
 
   // Set first service as selected when services load
   if (services.length > 0 && !selectedService) {
-    setSelectedService(services[0].service_name);
+    setSelectedService(services[0].service_name)
   }
 
   // Mutation for updating credentials
@@ -60,34 +60,35 @@ export default function CredentialsManager() {
     onSuccess: (result: UpdateResponse) => {
       setSuccess(
         `✓ Credentials updated successfully at ${new Date(result.updated_at).toLocaleString()}`
-      );
-      setUsername("");
-      setPassword("");
-      setConfirmPassword("");
+      )
+      setUsername('')
+      setPassword('')
+      setConfirmPassword('')
       // Refetch services to get updated list
       queryClient.invalidateQueries(
         listServicesApiCredentialsServicesGetOptions()
-      );
+      )
     },
     onError: (err: any) => {
-      const errorMessage = err?.response?.data?.detail || "Failed to update credentials";
-      setError(errorMessage);
+      const errorMessage =
+        err?.response?.data?.detail || 'Failed to update credentials'
+      setError(errorMessage)
     },
-  });
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
+    e.preventDefault()
+    setError('')
+    setSuccess('')
 
     if (!selectedService || !username || !password) {
-      setError("All fields are required");
-      return;
+      setError('All fields are required')
+      return
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
+      setError('Passwords do not match')
+      return
     }
 
     updateMutation.mutate({
@@ -96,19 +97,19 @@ export default function CredentialsManager() {
         username,
         password,
       },
-    });
-  };
+    })
+  }
 
   if (servicesLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" h="200px">
         <Text>Loading...</Text>
       </Box>
-    );
+    )
   }
 
   return (
-    <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={8}>
+    <Grid templateColumns={{ base: '1fr', lg: '1fr 1fr' }} gap={8}>
       {/* Services List */}
       <GridItem>
         <Box borderWidth="1px" borderRadius="lg" p={4} mb={4}>
@@ -119,7 +120,7 @@ export default function CredentialsManager() {
           {services.length === 0 ? (
             <Text color="gray.500">No services configured</Text>
           ) : (
-           <VStack align="stretch" gap={2}>
+            <VStack align="stretch" gap={2}>
               {services.map((service) => (
                 <Box
                   key={service.service_name}
@@ -129,13 +130,11 @@ export default function CredentialsManager() {
                   cursor="pointer"
                   bg={
                     selectedService === service.service_name
-                      ? "blue.50"
-                      : "white"
+                      ? 'blue.50'
+                      : 'white'
                   }
-                  onClick={() =>
-                    setSelectedService(service.service_name)
-                  }
-                  _hover={{ bg: "gray.50" }}
+                  onClick={() => setSelectedService(service.service_name)}
+                  _hover={{ bg: 'gray.50' }}
                 >
                   <Flex justify="space-between" align="center">
                     <Box>
@@ -149,20 +148,12 @@ export default function CredentialsManager() {
                     <Box
                       px={2}
                       py={1}
-                      bg={
-                        service.is_active
-                          ? "green.100"
-                          : "red.100"
-                      }
-                      color={
-                        service.is_active
-                          ? "green.800"
-                          : "red.800"
-                      }
+                      bg={service.is_active ? 'green.100' : 'red.100'}
+                      color={service.is_active ? 'green.800' : 'red.800'}
                       borderRadius="md"
                       fontSize="xs"
                     >
-                      {service.is_active ? "Active" : "Inactive"}
+                      {service.is_active ? 'Active' : 'Inactive'}
                     </Box>
                   </Flex>
                 </Box>
@@ -180,11 +171,7 @@ export default function CredentialsManager() {
             {services
               .filter((s) => s.service_name === selectedService)
               .map((service) => (
-                <VStack
-                  align="start"
-                  gap={3}
-                  key={service.service_name}
-                >
+                <VStack align="start" gap={3} key={service.service_name}>
                   <Box>
                     <Text fontSize="sm" color="gray.600">
                       Username
@@ -204,9 +191,7 @@ export default function CredentialsManager() {
                       <Text fontSize="sm" color="gray.600">
                         Updated By
                       </Text>
-                      <Text fontWeight="bold">
-                        {service.updated_by}
-                      </Text>
+                      <Text fontWeight="bold">{service.updated_by}</Text>
                     </Box>
                   )}
                 </VStack>
@@ -319,10 +304,10 @@ export default function CredentialsManager() {
                 <Button
                   variant="outline"
                   onClick={() => {
-                    setUsername("");
-                    setPassword("");
-                    setConfirmPassword("");
-                    setError("");
+                    setUsername('')
+                    setPassword('')
+                    setConfirmPassword('')
+                    setError('')
                   }}
                   disabled={updateMutation.isPending}
                   flex={1}
@@ -350,5 +335,5 @@ export default function CredentialsManager() {
         </Box>
       </GridItem>
     </Grid>
-  );
+  )
 }

@@ -4,12 +4,12 @@
 
 :root {
   --fg: #1a202c;
-  --bg: #FAFAFA;
-  --main: #EDF2F7;
+  --bg: #fafafa;
+  --main: #edf2f7;
 }
 
 [data-theme='dark'] {
-  --fg: #FAFAFA;
+  --fg: #fafafa;
   --bg: #1a202c;
 }
 

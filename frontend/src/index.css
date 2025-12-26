@@ -12,14 +12,14 @@
   /* -webkit-font-smoothing: antialiased; */
   /* -moz-osx-font-smoothing: grayscale; */
 
- /* Your default theme */
-  --background: "#FAFAFA";
-  --foreground: "#1A202C";
+  /* Your default theme */
+  --background: '#FAFAFA';
+  --foreground: '#1A202C';
 }
 
 [data-theme='dark'] {
-  --background: "#1A202C";
-  --foreground: "#FAFAFA";
+  --background: '#1A202C';
+  --foreground: '#FAFAFA';
 }
 
 /* a { */

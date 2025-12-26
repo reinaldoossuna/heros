@@ -1,45 +1,66 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { MetereologicoData } from '../../client';
-import moment from 'moment';
-import { formatter_tooltip } from '../../utils';
-import { Box, Text } from '@chakra-ui/react';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts'
+import { MetereologicoData } from '../../client'
+import moment from 'moment'
+import { formatter_tooltip } from '../../utils'
+import { Box, Text } from '@chakra-ui/react'
 
 const RainChart = ({ data }: { data: Array<MetereologicoData> }) => {
-    if (!data || data.length === 0) {
-        return (
-            <Box p={4} textAlign="center">
-                <Text>No rainfall data available for this date</Text>
-            </Box>
-        );
-    }
-
+  if (!data || data.length === 0) {
     return (
-        <ResponsiveContainer width="100%" height={300}>
-            <BarChart
-                width={500}
-                height={300}
-                data={data}
-                syncId="metId"
-                margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                }}
-            >
-                <CartesianGrid strokeDasharray="3 3" />
-
-                <XAxis
-                    dataKey={d => d.data.getTime()}
-                    domain={[data[0].data.getTime(), data[data.length - 1].data.getTime()]}
-                    tickFormatter={(value, _) => moment(value).format('HH:mm')}
-                    scale="time" type="number" />
-                <YAxis domain={[0, 10]} />
-                <Tooltip labelFormatter={(value) => moment(value).format('DD/MM/Y HH:mm')} formatter={formatter_tooltip} />
-                <Bar name="Precipitacao" dataKey="precipitacao" fill="#2257A0" activeBar={{ r: 8 }} />
-            </BarChart>
-        </ResponsiveContainer >
+      <Box p={4} textAlign="center">
+        <Text>No rainfall data available for this date</Text>
+      </Box>
     )
-};
+  }
 
-export default RainChart;
+  return (
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart
+        width={500}
+        height={300}
+        data={data}
+        syncId="metId"
+        margin={{
+          top: 5,
+          right: 30,
+          left: 20,
+          bottom: 5,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+
+        <XAxis
+          dataKey={(d) => d.data.getTime()}
+          domain={[
+            data[0].data.getTime(),
+            data[data.length - 1].data.getTime(),
+          ]}
+          tickFormatter={(value, _) => moment(value).format('HH:mm')}
+          scale="time"
+          type="number"
+        />
+        <YAxis domain={[0, 10]} />
+        <Tooltip
+          labelFormatter={(value) => moment(value).format('DD/MM/Y HH:mm')}
+          formatter={formatter_tooltip}
+        />
+        <Bar
+          name="Precipitacao"
+          dataKey="precipitacao"
+          fill="#2257A0"
+          activeBar={{ r: 8 }}
+        />
+      </BarChart>
+    </ResponsiveContainer>
+  )
+}
+
+export default RainChart
