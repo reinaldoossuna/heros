@@ -62,6 +62,31 @@ export type GaugeData = {
     data: (number | null);
 };
 
+/**
+ * Overall health check response.
+ */
+export type HealthCheckResponse = {
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    database: 'healthy' | 'unhealthy';
+    services: Array<ServiceStatus>;
+    message?: string;
+};
+
+export type status = 'healthy' | 'degraded' | 'unhealthy';
+
+export const status = {
+    HEALTHY: 'healthy',
+    DEGRADED: 'degraded',
+    UNHEALTHY: 'unhealthy'
+} as const;
+
+export type database = 'healthy' | 'unhealthy';
+
+export const database = {
+    HEALTHY: 'healthy',
+    UNHEALTHY: 'unhealthy'
+} as const;
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
@@ -147,6 +172,23 @@ export const SensorType = {
     LINIGRAFO: 'linigrafo',
     WEATHER: 'weather',
     GAUGE: 'gauge'
+} as const;
+
+/**
+ * Status of an external service.
+ */
+export type ServiceStatus = {
+    name: string;
+    status: 'healthy' | 'unhealthy' | 'unknown';
+    message?: string;
+};
+
+export type status2 = 'healthy' | 'unhealthy' | 'unknown';
+
+export const status2 = {
+    HEALTHY: 'healthy',
+    UNHEALTHY: 'unhealthy',
+    UNKNOWN: 'unknown'
 } as const;
 
 export type ValidationError = {
@@ -315,6 +357,10 @@ export type GetCredentialAuditLogApiCredentialsAuditServiceNameGetResponse = ({
 });
 
 export type GetCredentialAuditLogApiCredentialsAuditServiceNameGetError = (HTTPValidationError);
+
+export type HealthCheckApiHealthGetResponse = (HealthCheckResponse);
+
+export type HealthCheckApiHealthGetError = unknown;
 
 export type HealtyApiHealtyGetResponse = (unknown);
 

@@ -157,6 +157,37 @@ export const HTTPValidationErrorSchema = {
     title: 'HTTPValidationError'
 } as const;
 
+export const HealthCheckResponseSchema = {
+    properties: {
+        status: {
+            type: 'string',
+            enum: ['healthy', 'degraded', 'unhealthy'],
+            title: 'Status'
+        },
+        database: {
+            type: 'string',
+            enum: ['healthy', 'unhealthy'],
+            title: 'Database'
+        },
+        services: {
+            items: {
+                '$ref': '#/components/schemas/ServiceStatus'
+            },
+            type: 'array',
+            title: 'Services'
+        },
+        message: {
+            type: 'string',
+            title: 'Message',
+            default: ''
+        }
+    },
+    type: 'object',
+    required: ['status', 'database', 'services'],
+    title: 'HealthCheckResponse',
+    description: 'Overall health check response.'
+} as const;
+
 export const IntervalSchema = {
     type: 'string',
     enum: ['hourly', 'daily'],
@@ -396,6 +427,29 @@ export const SensorTypeSchema = {
     type: 'string',
     enum: ['linigrafo', 'weather', 'gauge'],
     title: 'SensorType'
+} as const;
+
+export const ServiceStatusSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        status: {
+            type: 'string',
+            enum: ['healthy', 'unhealthy', 'unknown'],
+            title: 'Status'
+        },
+        message: {
+            type: 'string',
+            title: 'Message',
+            default: ''
+        }
+    },
+    type: 'object',
+    required: ['name', 'status'],
+    title: 'ServiceStatus',
+    description: 'Status of an external service.'
 } as const;
 
 export const ValidationErrorSchema = {

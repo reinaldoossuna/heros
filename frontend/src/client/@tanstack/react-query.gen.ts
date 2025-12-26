@@ -3,7 +3,7 @@
 import type { OptionsLegacyParser } from '@hey-api/client-fetch';
 import { queryOptions, infiniteQueryOptions, type InfiniteData, type UseMutationOptions } from '@tanstack/react-query';
 import type { GetDataApiLinigrafosGetData, GetDataApiLinigrafosGetError, GetDataApiLinigrafosGetResponse, GetLocalAvgDataApiLinigrafosAvgLocalIntervalGetData, GetLocalDataApiLinigrafosLocalGetData, GetLocalDataApiLinigrafosLocalGetError, GetLocalDataApiLinigrafosLocalGetResponse, GetDataApiMetereologicoGetData, GetDataApiMetereologicoGetError, GetDataApiMetereologicoGetResponse, DownloadDataApiDownloadPostData, DownloadDataApiDownloadPostError, DownloadDataApiDownloadPostResponse, GetStationDataApiGaugesStationGetData, GetStationDataApiGaugesStationGetError, GetStationDataApiGaugesStationGetResponse, GetDailyStationDataApiGaugesDailyStationGetData, GetDailyStationDataApiGaugesDailyStationGetError, GetDailyStationDataApiGaugesDailyStationGetResponse, GetCredentialInfoApiCredentialsInfoServiceNameGetData, UpdateCredentialApiCredentialsUpdatePostData, UpdateCredentialApiCredentialsUpdatePostError, UpdateCredentialApiCredentialsUpdatePostResponse, GetCredentialAuditLogApiCredentialsAuditServiceNameGetData } from '../types.gen';
-import { client, getDataApiLinigrafosGet, updateDataApiLinigrafosUpdateGet, lastUpdateApiLinigrafosUpdateLastGet, sensorsLastupdateApiLinigrafosLastupdateGet, getLocalAvgDataApiLinigrafosAvgLocalIntervalGet, getLocalDataApiLinigrafosLocalGet, getDataApiMetereologicoGet, updateDataApiMetereologicoUpdateGet, lastUpdateApiMetereologicoUpdateLastGet, canLoginApiMetereologicoCanLoginGet, getDataDaysApiMetereologicoDaysGet, getLocationsv2ApiLocationV2Get, getLocationsApiLocationGet, downloadDataApiDownloadPost, getStationDataApiGaugesStationGet, getDailyStationDataApiGaugesDailyStationGet, getCredentialInfoApiCredentialsInfoServiceNameGet, listServicesApiCredentialsServicesGet, updateCredentialApiCredentialsUpdatePost, getCredentialAuditLogApiCredentialsAuditServiceNameGet, healtyApiHealtyGet } from '../sdk.gen';
+import { client, getDataApiLinigrafosGet, updateDataApiLinigrafosUpdateGet, lastUpdateApiLinigrafosUpdateLastGet, sensorsLastupdateApiLinigrafosLastupdateGet, getLocalAvgDataApiLinigrafosAvgLocalIntervalGet, getLocalDataApiLinigrafosLocalGet, getDataApiMetereologicoGet, updateDataApiMetereologicoUpdateGet, lastUpdateApiMetereologicoUpdateLastGet, canLoginApiMetereologicoCanLoginGet, getDataDaysApiMetereologicoDaysGet, getLocationsv2ApiLocationV2Get, getLocationsApiLocationGet, downloadDataApiDownloadPost, getStationDataApiGaugesStationGet, getDailyStationDataApiGaugesDailyStationGet, getCredentialInfoApiCredentialsInfoServiceNameGet, listServicesApiCredentialsServicesGet, updateCredentialApiCredentialsUpdatePost, getCredentialAuditLogApiCredentialsAuditServiceNameGet, healthCheckApiHealthGet, healtyApiHealtyGet } from '../sdk.gen';
 
 type QueryKey<TOptions extends OptionsLegacyParser> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -606,6 +606,25 @@ export const getCredentialAuditLogApiCredentialsAuditServiceNameGetOptions = (op
             return data;
         },
         queryKey: getCredentialAuditLogApiCredentialsAuditServiceNameGetQueryKey(options)
+    });
+};
+
+export const healthCheckApiHealthGetQueryKey = (options?: OptionsLegacyParser) => [
+    createQueryKey('healthCheckApiHealthGet', options)
+];
+
+export const healthCheckApiHealthGetOptions = (options?: OptionsLegacyParser) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await healthCheckApiHealthGet({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: healthCheckApiHealthGetQueryKey(options)
     });
 };
 
