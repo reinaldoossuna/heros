@@ -33,6 +33,7 @@ import {
   SegredoPolyLine,
 } from '@/BaciasShapeFile.ts'
 import { Link } from '@tanstack/react-router'
+import { SystemHealthStatus } from '../../components/common/SystemHealthStatus'
 
 function get_icon(sensor: SensorType) {
   var url
@@ -113,12 +114,15 @@ function Dashboard() {
 
   return (
     <>
-      <Box maxH={'100vh'} pt={12} m={4}>
-        <Heading size={'4xl'} p={5}>
-          Mapa
+      <Box maxH={'100vh'} pt={12} px={8} py={6}>
+        <Heading size={'2xl'} mb={6}>
+          Bem-vindo
         </Heading>
+        <Box mb={8}>
+          <SystemHealthStatus />
+        </Box>
         <MapContainer
-          style={{ height: '70vh', width: 'auto' }}
+          style={{ height: '65vh', width: '100%', borderRadius: '8px' }}
           center={position}
           zoom={10}
           scrollWheelZoom={true}
