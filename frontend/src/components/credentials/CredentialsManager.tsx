@@ -76,6 +76,16 @@ export default function CredentialsManager() {
     },
   })
 
+  const handleServiceClick = (serviceName: string) => {
+    const service = services.find((s) => s.service_name === serviceName)
+    setSelectedService(serviceName)
+    if (service) {
+      setUsername(service.username)
+    }
+    setPassword('')
+    setConfirmPassword('')
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
@@ -133,7 +143,7 @@ export default function CredentialsManager() {
                       ? 'blue.50'
                       : 'white'
                   }
-                  onClick={() => setSelectedService(service.service_name)}
+                  onClick={() => handleServiceClick(service.service_name)}
                   _hover={{ bg: 'gray.50' }}
                 >
                   <Flex justify="space-between" align="center">
