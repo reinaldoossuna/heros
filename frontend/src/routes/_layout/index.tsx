@@ -7,6 +7,8 @@ import {
   TileLayer,
   Polyline,
   Tooltip,
+  LayersControl,
+  LayerGroup,
 } from 'react-leaflet'
 import { LatLng, LatLngTuple, PointExpression } from 'leaflet'
 import { useQuery } from '@tanstack/react-query'
@@ -127,44 +129,121 @@ function Dashboard() {
           zoom={10}
           scrollWheelZoom={true}
         >
-          <TileLayer
-            maxZoom={13}
-            minZoom={11}
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
+          <LayersControl position="topright">
+            <LayersControl.BaseLayer checked name="OpenStreetMap">
+              <TileLayer
+                maxZoom={13}
+                minZoom={11}
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+            </LayersControl.BaseLayer>
+            <LayersControl.BaseLayer name="Stamen Toner Lite">
+              <TileLayer
+                maxZoom={13}
+                minZoom={11}
+                attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png"
+              />
+            </LayersControl.BaseLayer>
+            <LayersControl.BaseLayer name="Esri World Imagery">
+              <TileLayer
+                maxZoom={13}
+                minZoom={11}
+                attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+                url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              />
+            </LayersControl.BaseLayer>
+            <LayersControl.Overlay checked name="Pluviômetros">
+              <LayerGroup>
+                {allLocations
+                  ?.filter((l) => l.sensor === SensorType.GAUGE)
+                  .map((d) => (
+                    <Marker
+                      key={d.alias}
+                      position={[d.latitude, d.longitude]}
+                      icon={get_icon(d.sensor)}
+                    >
+                      <Popup>
+                        Nome: {d.alias} <br />
+                        Status: {d.status} <br />
+                        Loc: {[d.latitude.toFixed(4), d.longitude.toFixed(4)]}{' '}
+                        <br />
+                        {get_link(d)}
+                      </Popup>
+                    </Marker>
+                  ))}
+              </LayerGroup>
+            </LayersControl.Overlay>
+            <LayersControl.Overlay checked name="Metereológicos">
+              <LayerGroup>
+                {allLocations
+                  ?.filter((l) => l.sensor === SensorType.WEATHER)
+                  .map((d) => (
+                    <Marker
+                      key={d.alias}
+                      position={[d.latitude, d.longitude]}
+                      icon={get_icon(d.sensor)}
+                    >
+                      <Popup>
+                        Nome: {d.alias} <br />
+                        Status: {d.status} <br />
+                        Loc: {[d.latitude.toFixed(4), d.longitude.toFixed(4)]}{' '}
+                        <br />
+                        {get_link(d)}
+                      </Popup>
+                    </Marker>
+                  ))}
+              </LayerGroup>
+            </LayersControl.Overlay>
+            <LayersControl.Overlay checked name="Linígrafos">
+              <LayerGroup>
+                {allLocations
+                  ?.filter((l) => l.sensor === SensorType.LINIGRAFO)
+                  .map((d) => (
+                    <Marker
+                      key={d.alias}
+                      position={[d.latitude, d.longitude]}
+                      icon={get_icon(d.sensor)}
+                    >
+                      <Popup>
+                        Nome: {d.alias} <br />
+                        Status: {d.status} <br />
+                        Loc: {[d.latitude.toFixed(4), d.longitude.toFixed(4)]}{' '}
+                        <br />
+                        {get_link(d)}
+                      </Popup>
+                    </Marker>
+                  ))}
+              </LayerGroup>
+            </LayersControl.Overlay>
+            <LayersControl.Overlay checked name="Bacias">
+              <LayerGroup>
+                {shedsToPlot.map((shed) => (
+                  <Polyline
+                    key={shed.name}
+                    pathOptions={{
+                      fill: true,
+                      fillOpacity: 0.1,
+                      color: shed.color,
+                    }}
+                    positions={shed.positions as LatLngTuple[]}
+                  >
+                    <Tooltip sticky>{shed.name}</Tooltip>
 
-          {allLocations?.map((d) => (
-            <Marker
-              key={d.alias}
-              position={[d.latitude, d.longitude]}
-              icon={get_icon(d.sensor)}
-            >
-              <Popup>
-                Nome: {d.alias} <br />
-                Status: {d.status} <br />
-                Loc: {[d.latitude.toFixed(4), d.longitude.toFixed(4)]} <br />
-                {get_link(d)}
-              </Popup>
-            </Marker>
-          ))}
-          {shedsToPlot.map((shed) => (
-            <Polyline
-              pathOptions={{ fill: true, fillOpacity: 0.1, color: shed.color }}
-              positions={shed.positions as LatLngTuple[]}
-            >
-              <Tooltip sticky>{shed.name}</Tooltip>
-
-              <Popup>
-                <Link
-                  to={'/gauges'}
-                  search={{ stations: sensors_in(shed.name) }}
-                >
-                  Veja os dados dos Pluviômetros nesta bacia
-                </Link>
-              </Popup>
-            </Polyline>
-          ))}
+                    <Popup>
+                      <Link
+                        to={'/gauges'}
+                        search={{ stations: sensors_in(shed.name) }}
+                      >
+                        Veja os dados dos Pluviômetros nesta bacia
+                      </Link>
+                    </Popup>
+                  </Polyline>
+                ))}
+              </LayerGroup>
+            </LayersControl.Overlay>
+          </LayersControl>
         </MapContainer>
       </Box>
     </>
