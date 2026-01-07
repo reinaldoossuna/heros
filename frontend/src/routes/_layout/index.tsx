@@ -23,8 +23,11 @@ function Dashboard() {
 
   const getSensorsIn = (shed: string) => {
     const shedAlias = shed.substring(0, 2)
+    if (!allLocations) {
+      return ''
+    }
     return allLocations
-      ?.filter((l) => l.sensor === SensorType.GAUGE)
+      .filter((l) => l.sensor === SensorType.GAUGE)
       .map((l) => l.alias)
       .filter((l) => l.toLowerCase().includes(shedAlias))
       .join(',')

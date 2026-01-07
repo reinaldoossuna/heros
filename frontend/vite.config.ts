@@ -8,12 +8,13 @@ export default defineConfig({
   plugins: [react(), TanStackRouterVite(), tsconfigPaths()],
   server: {
     proxy: {
-      '/api': {
+      '/server': {
         changeOrigin: true,
-        target: 'http://localhost:8001',
+        target: 'http://heros-server.local:8000',
         secure: false,
-      },
-    },
-    cors: { origin: 'http://localhost' },
-  },
+ rewrite: (path) => path.replace(/^\/server/, ''),
+      }},
+        cors: { origin: "http://localhost" },
+        allowedHosts: ["heros-server.local"]
+  }
 })

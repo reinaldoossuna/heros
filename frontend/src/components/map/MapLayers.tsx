@@ -1,4 +1,4 @@
-import React from 'react'
+
 import {
   LayersControl,
   LayerGroup,
@@ -10,8 +10,8 @@ import {
 } from 'react-leaflet'
 import { LatLngTuple } from 'leaflet'
 import { Link } from '@tanstack/react-router'
-import { Location, SensorType } from '../../../client/types.gen'
-import { get_icon, get_link } from './mapUtils'
+import { Location, SensorType } from '../../client/types.gen'
+import { get_icon } from './mapUtils'
 import { shedsToPlot } from './shedsData'
 
 interface MapLayersProps {
@@ -58,6 +58,19 @@ const SENSOR_OVERLAYS: SensorOverlayConfig[] = [
 ]
 
 const MAP_ZOOM_BOUNDS = { minZoom: 11, maxZoom: 13 }
+
+// TODO: This could be improved to handle all sensor types
+export function get_link(location: Location) {
+  if (location.sensor === SensorType.GAUGE) {
+    return (
+      <Link to={'/gauges'} search={{ stations: location.alias }}>
+        {' '}
+        Veja os dados{' '}
+      </Link>
+    )
+  }
+  return <></>
+}
 
 interface SensorMarkerOverlayProps {
   config: SensorOverlayConfig

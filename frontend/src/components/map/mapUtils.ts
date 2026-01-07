@@ -1,12 +1,10 @@
 import L from 'leaflet'
 import { PointExpression } from 'leaflet'
-import { Link } from '@tanstack/react-router'
-import React from 'react'
 
-import rulerMarker from '../../../assets/ruler.png'
-import radarMarker from '../../../assets/temperature-sensor.png'
-import gaugeMarker from '../../../assets/raingauge.png'
-import { Location, SensorType } from '../../../client/types.gen'
+import rulerMarker from '../../assets/ruler.png'
+import radarMarker from '../../assets/temperature-sensor.png'
+import gaugeMarker from '../../assets/raingauge.png'
+import { SensorType } from '../../client/types.gen'
 
 export function get_icon(sensor: SensorType) {
   let url
@@ -30,15 +28,3 @@ export function get_icon(sensor: SensorType) {
   })
 }
 
-// TODO: This could be improved to handle all sensor types
-export function get_link(location: Location) {
-  if (location.sensor === SensorType.GAUGE) {
-    return (
-      <Link to={'/gauges'} search={{ stations: location.alias }}>
-        {' '}
-        Veja os dados{' '}
-      </Link>
-    )
-  }
-  return <></>
-}

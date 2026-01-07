@@ -53,7 +53,8 @@ function getServiceIcon(serviceName: string): IconType {
 export function SystemHealthStatus() {
   const { data: healthData } = useQuery({
     ...healthCheckApiHealthGetOptions(),
-    refetchInterval: 30000,
+    //        day   hour min sec  milli
+    staleTime: 1 * 24 * 60 * 60 * 1000,
   })
 
   if (!healthData) {

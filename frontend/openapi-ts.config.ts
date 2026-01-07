@@ -1,6 +1,7 @@
 import { defaultPlugins, defineConfig } from '@hey-api/openapi-ts'
 
 export default defineConfig({
+<<<<<<< Updated upstream
   client: '@hey-api/client-fetch',
   input: 'http://localhost:8001/api/openapi.json',
   output: {
@@ -14,6 +15,14 @@ export default defineConfig({
     {
       dates: true,
       name: '@hey-api/transformers',
+=======
+    client: '@hey-api/client-fetch',
+    input: 'http://localhost:8000/api/openapi.json',
+    output: {
+        format: 'biome',
+        lint: 'eslint',
+        path: './src/client',
+>>>>>>> Stashed changes
     },
     { name: '@hey-api/sdk', transformer: true },
     {
